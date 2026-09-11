@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22716096.svg)](https://doi.org/10.5281/zenodo.22716096)
+
 # moss-regularization
 
 **Physically grounded nonlinear vacuum-damping regularization for CFD and
