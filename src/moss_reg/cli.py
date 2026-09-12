@@ -166,7 +166,9 @@ def _build_parser() -> argparse.ArgumentParser:
 # helpers
 # ---------------------------------------------------------------------------
 
-def _print_metrics(title: str, metrics: Dict[str, Any], indent: int = 2) -> None:
+def _print_metrics(title: str, metrics: Dict[str, Any], indent: int = 2,
+                   as_checks: bool = False) -> None:
+    """Print a metrics dictionary; booleans read PASS/FAIL only inside ``checks``."""
     pad = " " * indent
     if indent == 2:
         print(f"[{title}]")
@@ -174,9 +176,12 @@ def _print_metrics(title: str, metrics: Dict[str, Any], indent: int = 2) -> None
         key = str(key)
         if isinstance(value, dict):
             print(f"{pad}{key}:")
-            _print_metrics(key, value, indent + 2)
+            _print_metrics(key, value, indent + 2, as_checks=(key == "checks"))
         elif isinstance(value, bool):
-            print(f"{pad}{key:28s} {'PASS' if value else 'FAIL'}")
+            if as_checks:
+                print(f"{pad}{key:28s} {'PASS' if value else 'FAIL'}")
+            else:
+                print(f"{pad}{key:28s} {'true' if value else 'false'}")
         elif isinstance(value, float):
             print(f"{pad}{key:28s} {value:.6g}")
         elif isinstance(value, (list, tuple)) and len(value) > 8:
