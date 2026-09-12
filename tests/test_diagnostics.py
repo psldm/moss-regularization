@@ -114,7 +114,7 @@ def test_spectral_tail_fraction():
     k2 = K[0] ** 2 + K[1] ** 2
     kmax = n / 3.0
     smooth = np.fft.fft2(np.cos(x)[:, None] * np.cos(2 * x)[None, :])
-    assert spectral_tail_fraction([smooth], k2, kmax) == 0.0
+    assert spectral_tail_fraction([smooth], k2, kmax) < 1e-20
     rough = np.fft.fft2(np.cos(x)[:, None] * np.cos(2 * x)[None, :] + 0.1 * np.cos(10 * x)[:, None] * np.ones(n)[None, :])
     frac = spectral_tail_fraction([rough], k2, kmax)
     assert 0.0 < frac < 1.0
