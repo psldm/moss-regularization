@@ -241,6 +241,39 @@ def _sweep(run: Dict[str, Any], figures_dir: str) -> str:
     return out
 
 
+def _sweep3d(run: Dict[str, Any], figures_dir: str) -> str:
+    m = run.get("metrics", {})
+    p = run.get("params", {})
+    out = "\\section{3D Taylor--Green sweep (\\texttt{moss-reg sweep3d})}\n\n"
+    out += _kv_table(p, "Sweep parameters.", "tab:sweep3d:params")
+    cols_c = ["n", "steps", "dt_min", "enstrophy_peak", "enstrophy_peak_time", "omega_max_peak",
+              "tail_fraction_max", "under_resolved_from_t", "budget_max_abs_residual", "wall_s"]
+    cols_d = ["n", "lam", "damping_mode", "enstrophy_peak", "omega_max_peak", "tail_fraction_max",
+              "under_resolved_from_t", "E_vac_final", "vac_fraction", "E_split_loss",
+              "budget_max_abs_residual", "threshold_ratio", "wall_s"]
+    for key, cols, cap in (("classical", cols_c, "Classical runs (resolution sweep)."),
+                           ("damped", cols_d, "Damped runs (damping-number sweep).")):
+        rows = m.get(key, [])
+        if not rows:
+            continue
+        lines = [" & ".join(num(r.get(k), 3) for k in cols) + " \\\\" for r in rows]
+        out += (
+            "\\begin{center}\\scriptsize\n"
+            f"\\begin{{longtable}}{{@{{}}{'r' * len(cols)}@{{}}}}\n"
+            f"\\caption{{{cap}}}\\\\\n\\toprule\n"
+            + " & ".join(tt(k) for k in cols) + " \\\\\n\\midrule\n\\endhead\n"
+            + "\n".join(lines)
+            + "\n\\bottomrule\n\\end{longtable}\n\\end{center}\n"
+        )
+    summary = {k: v for k, v in m.items() if k not in ("classical", "damped", "timeseries_csv")}
+    out += _kv_table(summary, "Sweep summary metrics.", "tab:sweep3d:summary")
+    if run.get("checks"):
+        out += _kv_table(run["checks"], "Sweep checks.", "tab:sweep3d:checks", checks=True)
+    for fig in run.get("figures", []):
+        out += _figure(fig, "3D Taylor--Green sweep figure as written by \\texttt{moss-reg sweep3d}.", "fig:sweep3d", figures_dir)
+    return out
+
+
 _PREAMBLE = r"""\documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -297,8 +330,7 @@ def generate_supplement(
         parts.append(_simple_run(by_cmd["compare:fluid3d"], "3D Taylor--Green vortex: classical vs. moss (compare)", figures_dir,
                                  "Three-dimensional Taylor--Green vortex as written by \\texttt{moss-reg compare --type fluid3d}."))
     if "sweep:fluid3d" in by_cmd:
-        parts.append(_simple_run(by_cmd["sweep:fluid3d"], "3D Taylor--Green sweep: resolution and damping number", figures_dir,
-                                 "3D Taylor--Green sweep as written by \\texttt{moss-reg sweep3d}."))
+        parts.append(_sweep3d(by_cmd["sweep:fluid3d"], figures_dir))
     for cmd, run in by_cmd.items():
         if cmd not in ("validate", "decay", "compare:particles", "sweep:particles", "compare:fluid", "compare:fluid3d", "sweep:fluid3d"):
             parts.append(_simple_run(run, cmd, figures_dir, f"Figure of {tt(cmd)}."))
