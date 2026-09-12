@@ -2,7 +2,7 @@
 
 Usage:
     moss-reg validate  [--json PATH] [--strict]
-    moss-reg compare   --type {particles,fluid} [options]
+    moss-reg compare   --type {particles,fluid,fluid3d} [options]
     moss-reg sweep     [options]
     moss-reg run-all   [--output DIR] [--quick]
     moss-reg supplement [--report PATH] [--output PATH] [--copy-figures]
@@ -37,6 +37,7 @@ from .benchmarks import (
     run_decay_benchmark,
     run_shell_crossing_benchmark,
     run_shell_crossing_sweep,
+    run_tg3d_benchmark,
 )
 from .report import git_info, make_entry, sanitize, write_report
 from .supplement import write_supplement
@@ -100,7 +101,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     cmp_ = sub.add_parser("compare", help="classical vs moss comparison, PNG + report.json")
     cmp_.add_argument(
-        "--type", dest="btype", required=True, choices=["particles", "fluid"]
+        "--type", dest="btype", required=True, choices=["particles", "fluid", "fluid3d"]
     )
     _add_output(cmp_)
     cmp_.add_argument("--n", type=int, default=None, help="resolution (particles / grid)")
@@ -109,8 +110,8 @@ def _build_parser() -> argparse.ArgumentParser:
     cmp_.add_argument("--c", type=float, default=None,
                       help="particles: speed of light in code units (overrides --compactness)")
     cmp_.add_argument("--lambda", dest="lambda_eff", type=float, default=None,
-                      help="fluid: dimensionless damping number")
-    cmp_.add_argument("--re", type=float, default=None, help="fluid: Reynolds number")
+                      help="fluid/fluid3d: dimensionless damping number")
+    cmp_.add_argument("--re", type=float, default=None, help="fluid/fluid3d: Reynolds number")
     cmp_.add_argument("--t-max", type=float, default=None, help="integration horizon")
     cmp_.add_argument("--dt", type=float, default=None, help="maximum timestep")
     cmp_.add_argument("--softening", type=float, default=None, help="particles: Plummer softening")
@@ -136,7 +137,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
     run_all = sub.add_parser("run-all", help="run every benchmark, sweep and validate")
     _add_output(run_all)
-    run_all.add_argument("--quick", action="store_true", help="reduced sweep grid")
+    run_all.add_argument("--quick", action="store_true", help="reduced sweep grid and 3D resolution")
+    run_all.add_argument("--no-3d", action="store_true", help="skip the 3D Taylor-Green benchmark")
 
     bench = sub.add_parser(
         "benchmark", help="(legacy) run a single benchmark suite with custom parameters"
@@ -235,6 +237,11 @@ def cmd_compare(args: argparse.Namespace, argv: Optional[List[str]] = None) -> i
         metrics = run_shell_crossing_benchmark(outdir, **kw)
         _print_metrics("compare:particles  1D cold collapse, classical vs moss", metrics)
         path = _record(outdir, "compare:particles", metrics.get("params", kw), metrics, argv, git)
+    elif args.btype == "fluid3d":
+        kw = _kwargs(args, _FLUID_MAP)
+        metrics = run_tg3d_benchmark(outdir, **kw)
+        _print_metrics("compare:fluid3d  3D Taylor-Green, classical vs moss", metrics)
+        path = _record(outdir, "compare:fluid3d", metrics.get("params", kw), metrics, argv, git)
     else:
         kw = _kwargs(args, _FLUID_MAP)
         metrics = run_cfd_benchmark(outdir, **kw)
@@ -278,6 +285,12 @@ def cmd_run_all(args: argparse.Namespace, argv: Optional[List[str]] = None) -> i
     _print_metrics("compare:fluid  2D Taylor-Green", metrics)
     _record(outdir, "compare:fluid", metrics.get("params", {}), metrics, argv, git)
     rc |= int(not all(bool(v) for v in metrics.get("checks", {}).values()))
+
+    if not args.no_3d:
+        metrics = run_tg3d_benchmark(outdir, n=16 if args.quick else 32, t_max=2.0 if args.quick else 6.0)
+        _print_metrics("compare:fluid3d  3D Taylor-Green", metrics)
+        _record(outdir, "compare:fluid3d", metrics.get("params", {}), metrics, argv, git)
+        rc |= int(not all(bool(v) for v in metrics.get("checks", {}).values()))
 
     results = _validate.run_checks()
     print(_validate.format_table(results))

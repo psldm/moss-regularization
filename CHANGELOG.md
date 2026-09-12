@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.3.0 (2026-09-12)
+
+### Added
+- `moss_reg.diagnostics`: `field_norms` (L2, H1 seminorm, enstrophy, L4 on a
+  padded grid, L-infinity, divergence, any dimension), `EnergyBudget`
+  (E(t) = E0 - D_visc - E_vac with every-step quadrature), `DiagnosticsLog`
+  (per-step recorder, CSV/JSON). Solvers expose `diagnostics()`; the particle
+  integrator accumulates the energy handed to the damping exactly
+  (`energy_to_vacuum`) so that E_kin + E_pot + E_vac is a checked invariant.
+- 3D spectral solver `SpectralNS3D` (rotational form, projection, RK4, 2/3
+  rule, padded cubic term) with the 3D Taylor-Green benchmark
+  `moss-reg compare --type fluid3d` (figure 05, CSV time series, Kolmogorov
+  resolution indicator k_max eta). `run-all` includes it (`--no-3d` to skip).
+- Spatially varying coupling `lam(x)` for both spectral solvers
+  (band-limited field, evaluated on the padded grid) and
+  `moss_reg.fluid.coupling`: `damping_number`, `lambda_eff_si`,
+  `physical_damping_number`, `lambda_field_from_density`.
+- General exponent: `exact_damping_alpha` (alpha >= 0; alpha = 2 is cubic).
+- Adapters (`integrations/`): header-only C99/C++ `moss_damp.h` with a
+  self-test compiled in CI; C# `MossDamp.cs` with a .NET 8 self-test in CI;
+  `moss_reg.integrations.damp` (NumPy) and `torch_ops.damp` (PyTorch,
+  CPU/GPU, autograd); Dedalus v3 and OpenFOAM `fvOptions` source-term
+  examples. All are cross-checked against the Python reference.
+- `moss-reg validate` grew to 29 checks (+ 1 XFAIL): 3D shear-mode decay,
+  3D energy budget and divergence, 3D dealiasing, particle energy invariant.
+- Benchmarks write every-step diagnostics as CSV next to the figures and
+  report the energy budget / invariant drift as checks.
+
+### Changed
+- `examples/raptor_shear.py` reworded as an under-resolved numerical test
+  with a tuned damping number (no "SpaceX", no "CRASHED vs STABLE").
+- Package author and project URLs set in `pyproject.toml`.
+
 ## 0.2.1 (2026-09-11)
 
 ### Added

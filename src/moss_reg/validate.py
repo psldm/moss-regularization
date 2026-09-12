@@ -27,6 +27,7 @@ import numpy as np
 from . import dimensions as D
 from .core.analytical import euler_step, exact_damping
 from .fluid.spectral import SpectralNS2D
+from .fluid.spectral3d import SpectralNS3D
 from .particles import integrator as _imod
 from .particles import kernel as _kmod
 from .particles.integrator import LagrangianSystem
@@ -315,6 +316,66 @@ def _damping_dt_limit() -> Tuple[bool, str]:
 
 
 # ---------------------------------------------------------------------------
+# fluid 3D
+# ---------------------------------------------------------------------------
+
+def _shear_mode_3d() -> Tuple[bool, str]:
+    nu = 0.05
+    s = SpectralNS3D(16, nu=nu, lam=0.0, dt_max=0.01)
+    s.set_shear_mode()
+    while s.time < 1.0 - 1e-12:
+        s.step(min(s.cfl_dt(), 1.0 - s.time))
+    err = float(np.abs(s.velocity()[0] - np.exp(-nu) * np.sin(s.X[1])).max())
+    return err < 1e-12, f"u = sin y exp(-nu t): max abs err {err:.1e}"
+
+
+def _energy_budget_3d() -> Tuple[bool, str]:
+    from .diagnostics import DiagnosticsLog
+
+    nu, lam = 0.01, 0.5
+    s = SpectralNS3D(16, nu=nu, lam=lam, dt_max=0.01)
+    s.set_taylor_green()
+    log = DiagnosticsLog()
+    log.record(s.time, **s.diagnostics())
+    while s.time < 0.5 - 1e-14:
+        s.step(min(s.cfl_dt(), 0.5 - s.time))
+        log.record(s.time, **s.diagnostics())
+    b = log.budget(nu=nu)
+    div = float(np.max(log.series("div_max")))
+    ok = b.max_abs_residual < 1e-6 and div < 1e-10
+    return ok, f"3D Taylor-Green: budget residual {b.max_abs_residual:.1e}, E_vac {b.summary()['E_vac_final']:.3e}, max |div u| {div:.1e}"
+
+
+def _cubic_dealiasing_3d() -> Tuple[bool, str]:
+    n, k = 16, 5
+    amps = {}
+    for cd in (False, True):
+        s = SpectralNS3D(n, nu=0.0, lam=1.0, cubic_dealias=cd)
+        u0 = np.cos(k * s.X[1])
+        s.set_field([u0, np.zeros_like(u0), np.zeros_like(u0)])
+        amps[cd] = abs(s._rhs(s.u_hat)[0][0, 1, 0]) / n**3
+    ok = amps[True] < 1e-10 and abs(amps[False] - 0.125) < 1e-6
+    return ok, f"aliased |k|=1 amplitude: 2/3 rule {amps[False]:.4f}, padded {amps[True]:.1e}"
+
+
+def _particle_energy_invariant() -> Tuple[bool, str]:
+    n = 32
+    x = np.linspace(-1.0, 1.0, n)
+    errs = []
+    for dt in (0.02, 0.01):
+        sys = LagrangianSystem(x[:, None], np.zeros((n, 1)), np.full(n, 1.0 / n), h=0.2,
+                               G=1.0, c=0.05, softening=0.4, damping=True, gravity=True)
+        e0 = sys.diagnostics(jacobian=False)["E_total"]
+        while sys.time < 1.5 - 1e-12:
+            sys.step(min(dt, 1.5 - sys.time))
+        d = sys.diagnostics(jacobian=False)
+        errs.append(abs(d["E_total"] - e0))
+    ratio = errs[0] / errs[1]
+    ok = errs[0] < 5e-2 * d["E_vac"] and 3.0 <= ratio <= 5.0
+    return ok, f"E_kin + E_pot + E_vac drift {errs[0]:.2e} -> {errs[1]:.2e} per dt halving (ratio {ratio:.2f}, expect 4); E_vac = {d['E_vac']:.3e}"
+
+
+# ---------------------------------------------------------------------------
 # runner
 # ---------------------------------------------------------------------------
 
@@ -337,6 +398,10 @@ _CHECKS: List[Tuple[str, str, CheckFn]] = [
     ("fluid", "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4", _energy_identity),
     ("fluid", "cubic damping term dealiased (2/3 rule alone is not enough)", _cubic_dealiasing),
     ("fluid", "cfl_dt includes the cubic damping stiffness limit", _damping_dt_limit),
+    ("fluid3d", "3D shear mode u = sin y decays exactly", _shear_mode_3d),
+    ("fluid3d", "3D Taylor-Green: energy budget closes, divergence-free", _energy_budget_3d),
+    ("fluid3d", "3D cubic damping term dealiased", _cubic_dealiasing_3d),
+    ("invariants", "particles: E_kin + E_pot + E_vac conserved to O(dt^2)", _particle_energy_invariant),
 ]
 
 

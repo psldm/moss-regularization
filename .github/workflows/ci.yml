@@ -21,3 +21,27 @@ jobs:
         run: python -m pytest -q
       - name: Self-validation (formulas, integrators, convergence, energy balance)
         run: moss-reg validate
+
+  adapters:
+    name: adapters (C, C++, C#)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: C header self-test (C99, -Wall -Wextra -Werror)
+        run: |
+          gcc -std=c99 -Wall -Wextra -Werror -O2 -o /tmp/test_moss_damp integrations/c/test_moss_damp.c -lm
+          /tmp/test_moss_damp
+      - name: Header compiles as C++
+        run: g++ -std=c++11 -Wall -Wextra -Werror -fsyntax-only -x c++ integrations/c/moss_damp.h
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: C# self-test
+        run: dotnet run --project integrations/csharp/MossDamp.Test -c Release --nologo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Cross-check adapters against the Python reference
+        run: |
+          pip install -e ".[dev]"
+          python -m pytest -q tests/test_integrations.py -rs

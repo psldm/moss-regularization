@@ -36,3 +36,6 @@ ENV/
 # Type checkers / linters
 .mypy_cache/
 .ruff_cache/
+
+# generated per-step time series (attached to releases as timeseries.zip)
+assets/*.csv

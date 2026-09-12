@@ -50,8 +50,12 @@ class SpectralNS2D:
         Grid resolution (n x n collocation points).
     nu : float
         Kinematic viscosity.
-    lam : float
-        Damping coupling in code units (lam = 0 recovers classical NS).
+    lam : float or (n, n) array
+        Damping coupling in code units (lam = 0 recovers classical NS).  An
+        array gives a spatially varying coupling lam(x, y), e.g. from a
+        density field via :func:`moss_reg.fluid.coupling.lambda_field_from_density`;
+        it is band-limited to the retained spectrum and evaluated on the
+        padded grid together with the cubic term.
     dt_max : float
         Maximum timestep.
     dealias : bool
@@ -73,7 +77,6 @@ class SpectralNS2D:
     ) -> None:
         self.n = int(n)
         self.nu = float(nu)
-        self.lam = float(lam)
         self.dt_max = float(dt_max)
         self.cubic_dealias = bool(cubic_dealias)
         self.time = 0.0
@@ -95,6 +98,30 @@ class SpectralNS2D:
         self.x, self.y = np.meshgrid(x, x)
         self.u_hat = np.zeros((self.n, self.n), dtype=np.complex128)
         self.v_hat = np.zeros((self.n, self.n), dtype=np.complex128)
+        self.set_lambda(lam)
+
+    # -- coupling ----------------------------------------------------------
+
+    def set_lambda(self, lam) -> None:
+        """Set a scalar coupling or a (n, n) field lam(x, y) >= 0."""
+        arr = np.asarray(lam, dtype=np.float64)
+        if arr.ndim == 0:
+            self.lam = float(arr)
+            self.lam_field = None
+            self._lam_pad = None
+            self.lam_max = self.lam
+        else:
+            if arr.shape != (self.n, self.n):
+                raise ValueError(f"lam field must have shape ({self.n}, {self.n})")
+            lam_hat = np.fft.fft2(arr) * self.mask          # band-limit like the velocity
+            self.lam_field = np.fft.ifft2(lam_hat).real
+            self._lam_pad = self._pad_to_real(lam_hat)
+            self.lam = float(np.mean(self.lam_field))       # mean value, for reporting
+            self.lam_max = float(np.max(self.lam_field))
+
+    @property
+    def has_damping(self) -> bool:
+        return self.lam_field is not None or self.lam != 0.0
 
     # -- initial conditions ------------------------------------------------
 
@@ -197,6 +224,23 @@ class SpectralNS2D:
         f = u * u + v * v
         return np.fft.fft2(f * u), np.fft.fft2(f * v)
 
+    def damping_term(
+        self, u_hat: np.ndarray, v_hat: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """Spectra of lam |u|^2 u and lam |u|^2 v for scalar or field lam."""
+        if self.lam_field is None:
+            cu, cv = self.cubic_term(u_hat, v_hat)
+            return self.lam * cu, self.lam * cv
+        if self.cubic_dealias:
+            u = self._pad_to_real(u_hat)
+            v = self._pad_to_real(v_hat)
+            f = self._lam_pad * (u * u + v * v)
+            return self._real_to_unpadded(f * u), self._real_to_unpadded(f * v)
+        u = np.fft.ifft2(u_hat).real
+        v = np.fft.ifft2(v_hat).real
+        f = self.lam_field * (u * u + v * v)
+        return np.fft.fft2(f * u), np.fft.fft2(f * v)
+
     # -- right-hand side ---------------------------------------------------
 
     def _rhs(
@@ -215,10 +259,10 @@ class SpectralNS2D:
         adv_v = -(u * vx + v * vy)
         rhs_u = -self.nu * self.k2 * u_hat + np.fft.fft2(adv_u)
         rhs_v = -self.nu * self.k2 * v_hat + np.fft.fft2(adv_v)
-        if self.lam:
-            cu, cv = self.cubic_term(u_hat, v_hat)
-            rhs_u -= self.lam * cu
-            rhs_v -= self.lam * cv
+        if self.has_damping:
+            du, dv = self.damping_term(u_hat, v_hat)
+            rhs_u -= du
+            rhs_v -= dv
         rhs_u *= self.mask
         rhs_v *= self.mask
         rhs_u[0, 0] = 0.0
@@ -254,8 +298,8 @@ class SpectralNS2D:
         # stability ~2.8; cfl * 2/3 keeps a comfortable margin)
         dt_damp = (
             np.inf
-            if (self.lam == 0.0 or umax2 == 0.0)
-            else cfl * 2.0 / (3.0 * self.lam * umax2)
+            if (not self.has_damping or self.lam_max == 0.0 or umax2 == 0.0)
+            else cfl * 2.0 / (3.0 * self.lam_max * umax2)
         )
         return {"advection": dt_adv, "viscosity": dt_visc, "damping": dt_damp}
 
@@ -292,7 +336,11 @@ class SpectralNS2D:
         u, v = self.velocity()
         # components in array-axis order: axis 0 is y, axis 1 is x
         d = field_norms([v, u], box=2.0 * np.pi, pad=self.PAD_FACTOR)
-        d["vac_power"] = float(self.lam) * d["l4_pow4"]
+        if self.lam_field is None:
+            d["vac_power"] = float(self.lam) * d["l4_pow4"]
+        else:
+            up, vp = self.velocity_padded()
+            d["vac_power"] = float(np.mean(self._lam_pad * (up * up + vp * vp) ** 2))
         d["steps"] = self.steps
         return d
 
