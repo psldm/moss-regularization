@@ -2,1729 +2,6 @@
   "schema": "moss-reg-report/1",
   "runs": [
     {
-      "command": "decay",
-      "timestamp_utc": "2026-09-12T03:33:03+00:00",
-      "argv": [
-        "run-all",
-        "--output",
-        "assets"
-      ],
-      "git": {
-        "commit": "09011f886d3d6f9112c0e4b308b2ad472a2d0aff",
-        "dirty": false,
-        "root": "/projects/Navier\u2013Stokes/moss-reg"
-      },
-      "environment": {
-        "moss_reg": "0.3.0",
-        "python": "3.14.7",
-        "numpy": "2.4.6",
-        "scipy": "1.16.2",
-        "matplotlib": "3.11.2",
-        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
-      },
-      "params": {
-        "lambda_eff": 1.0,
-        "v0": [
-          1.0,
-          0.25,
-          -0.5
-        ],
-        "t_max": 4.0,
-        "dt_max": 0.02
-      },
-      "metrics": {
-        "speed0": 1.14564392373896,
-        "lambda": 1.0,
-        "euler_slope": 1.0303058782247174,
-        "params": {
-          "lambda_eff": 1.0,
-          "v0": [
-            1.0,
-            0.25,
-            -0.5
-          ],
-          "t_max": 4.0,
-          "dt_max": 0.02
-        }
-      },
-      "checks": {
-        "euler_first_order": true
-      },
-      "figures": [
-        "assets/01_velocity_decay.png"
-      ]
-    },
-    {
-      "command": "compare:particles",
-      "timestamp_utc": "2026-09-12T03:33:07+00:00",
-      "argv": [
-        "run-all",
-        "--output",
-        "assets"
-      ],
-      "git": {
-        "commit": "09011f886d3d6f9112c0e4b308b2ad472a2d0aff",
-        "dirty": false,
-        "root": "/projects/Navier\u2013Stokes/moss-reg"
-      },
-      "environment": {
-        "moss_reg": "0.3.0",
-        "python": "3.14.7",
-        "numpy": "2.4.6",
-        "scipy": "1.16.2",
-        "matplotlib": "3.11.2",
-        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
-      },
-      "params": {
-        "n": 200,
-        "c": 3.162277660168379,
-        "compactness": 0.10000000000000002,
-        "t_max": 6.0,
-        "dt_max": 0.005,
-        "softening": 0.4,
-        "h": 0.12,
-        "G": 1.0,
-        "M": 1.0,
-        "L": 1.0
-      },
-      "metrics": {
-        "n": 200,
-        "c": 3.162277660168379,
-        "compactness": 0.10000000000000002,
-        "regime": "physical (v_ff < c)",
-        "v_ff": 1.5705568465749749,
-        "v_ff_over_c": 0.496653682994854,
-        "crossing_time_classical": 1.2099999999999962,
-        "crossing_time_moss": 1.219999999999996,
-        "crossing_delay": 0.009999999999999787,
-        "min_jacobian_moss": -4.396424649553703,
-        "vpeak_moss": 1.6440374493187788,
-        "vpeak_moss_over_c": 0.5198902898460979,
-        "vfinal_moss": 1.2666356279295032,
-        "steps_classical": 242,
-        "steps_moss": 1201,
-        "E_vac_moss_final": 0.10343692781009808,
-        "E_total_drift_moss": 3.123343056010697e-05,
-        "timeseries_csv": [
-          "assets/02_shell_crossing_classical_timeseries.csv",
-          "assets/02_shell_crossing_moss_timeseries.csv"
-        ],
-        "params": {
-          "n": 200,
-          "c": 3.162277660168379,
-          "compactness": 0.10000000000000002,
-          "t_max": 6.0,
-          "dt_max": 0.005,
-          "softening": 0.4,
-          "h": 0.12,
-          "G": 1.0,
-          "M": 1.0,
-          "L": 1.0
-        }
-      },
-      "checks": {
-        "undamped_crossing_detected": true,
-        "jacobian_histories_finite": true,
-        "damped_speed_bounded": true,
-        "energy_invariant_moss": true
-      },
-      "figures": [
-        "assets/02_shell_crossing_arrest.png"
-      ]
-    },
-    {
-      "command": "sweep:particles",
-      "timestamp_utc": "2026-09-12T03:33:36+00:00",
-      "argv": [
-        "run-all",
-        "--output",
-        "assets"
-      ],
-      "git": {
-        "commit": "09011f886d3d6f9112c0e4b308b2ad472a2d0aff",
-        "dirty": false,
-        "root": "/projects/Navier\u2013Stokes/moss-reg"
-      },
-      "environment": {
-        "moss_reg": "0.3.0",
-        "python": "3.14.7",
-        "numpy": "2.4.6",
-        "scipy": "1.16.2",
-        "matplotlib": "3.11.2",
-        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
-      },
-      "params": {
-        "quick": false,
-        "c_values": [
-          0.005,
-          0.01,
-          0.02,
-          0.05,
-          0.1,
-          0.2,
-          0.5,
-          1.0,
-          2.0,
-          5.0
-        ],
-        "n_values": [
-          64,
-          128,
-          256
-        ],
-        "t_max": 8.0,
-        "dt_max": 0.005,
-        "h": 0.12,
-        "softening": 0.4,
-        "baseline_n": 128,
-        "baseline_c": 0.01,
-        "dt_values": [
-          0.02,
-          0.01,
-          0.005,
-          0.0025
-        ],
-        "h_values": [
-          0.06,
-          0.09,
-          0.12,
-          0.18,
-          0.24
-        ],
-        "softening_values": [
-          0.2,
-          0.3,
-          0.4,
-          0.6,
-          0.8
-        ],
-        "G": 1.0,
-        "M": 1.0,
-        "L": 1.0
-      },
-      "metrics": {
-        "v_ff": 1.5699518850688514,
-        "speed_cap_ratio_median": 1.518668013950263,
-        "no_crossing_within_horizon": [
-          [
-            64,
-            0.005
-          ],
-          [
-            128,
-            0.005
-          ]
-        ],
-        "crossing_time_monotone_in_n_at_baseline": true,
-        "baseline_crossing_times_by_n": {
-          "64": 7.59499999999986,
-          "128": 4.729999999999921,
-          "256": 3.0349999999999575
-        },
-        "physical_regime_max_delay": 0.02999999999999936,
-        "conclusion": "damped runs are speed-limited at |v| ~ 1.52 c; crossing is delayed by ~ (particle spacing)/c and moves earlier as N grows (monotone at c = 0.01); in the physical regime c >= v_ff the maximal delay is 0.03 time units (2 of 30 runs show no crossing within t = 8, all at c < v_ff)",
-        "wall_s": 28.455260331997124,
-        "runs": [
-          {
-            "n": 64,
-            "c": 0.005,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": null,
-            "crossed": false,
-            "min_j": 0.3571272765611126,
-            "v_peak": 0.00772884525786594,
-            "v_peak_over_c": 1.5457690515731881,
-            "steps": 1601,
-            "wall_s": 0.4238442810019478
-          },
-          {
-            "n": 64,
-            "c": 0.01,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 7.59499999999986,
-            "crossed": true,
-            "min_j": -0.0002329340502770954,
-            "v_peak": 0.014659316279896549,
-            "v_peak_over_c": 1.4659316279896548,
-            "steps": 1519,
-            "wall_s": 0.4023927750022267
-          },
-          {
-            "n": 64,
-            "c": 0.02,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 3.7949999999999413,
-            "crossed": true,
-            "min_j": -0.0006178673368979401,
-            "v_peak": 0.02888709170103876,
-            "v_peak_over_c": 1.444354585051938,
-            "steps": 759,
-            "wall_s": 0.20314756400330225
-          },
-          {
-            "n": 64,
-            "c": 0.05,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.8999999999999815,
-            "crossed": true,
-            "min_j": -0.0027052894090109714,
-            "v_peak": 0.07176173165577517,
-            "v_peak_over_c": 1.4352346331155033,
-            "steps": 380,
-            "wall_s": 0.10182910499861464
-          },
-          {
-            "n": 64,
-            "c": 0.1,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.5799999999999883,
-            "crossed": true,
-            "min_j": -0.001394499509544664,
-            "v_peak": 0.14270916002523226,
-            "v_peak_over_c": 1.4270916002523226,
-            "steps": 316,
-            "wall_s": 0.08350978700036649
-          },
-          {
-            "n": 64,
-            "c": 0.2,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.4849999999999903,
-            "crossed": true,
-            "min_j": -0.006369195917862635,
-            "v_peak": 0.28226566897918787,
-            "v_peak_over_c": 1.4113283448959393,
-            "steps": 297,
-            "wall_s": 0.07855058999848552
-          },
-          {
-            "n": 64,
-            "c": 0.5,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.4149999999999918,
-            "crossed": true,
-            "min_j": -0.0013326440157269376,
-            "v_peak": 0.6911541218657129,
-            "v_peak_over_c": 1.3823082437314258,
-            "steps": 283,
-            "wall_s": 0.07909190800273791
-          },
-          {
-            "n": 64,
-            "c": 1.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.3499999999999932,
-            "crossed": true,
-            "min_j": -0.00247900370302534,
-            "v_peak": 1.2173956600218958,
-            "v_peak_over_c": 1.2173956600218958,
-            "steps": 270,
-            "wall_s": 0.07323105300019961
-          },
-          {
-            "n": 64,
-            "c": 2.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.2499999999999953,
-            "crossed": true,
-            "min_j": -0.0036737560523421517,
-            "v_peak": 1.5388799491337393,
-            "v_peak_over_c": 0.7694399745668696,
-            "steps": 250,
-            "wall_s": 0.06725850099610398
-          },
-          {
-            "n": 64,
-            "c": 5.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.219999999999996,
-            "crossed": true,
-            "min_j": -0.0025384663157326398,
-            "v_peak": 1.5599329678385818,
-            "v_peak_over_c": 0.31198659356771635,
-            "steps": 244,
-            "wall_s": 0.0658485500025563
-          },
-          {
-            "n": 128,
-            "c": 0.005,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": null,
-            "crossed": false,
-            "min_j": 0.09085405965752863,
-            "v_peak": 0.008058221273903664,
-            "v_peak_over_c": 1.6116442547807328,
-            "steps": 1601,
-            "wall_s": 1.0981299260020023
-          },
-          {
-            "n": 128,
-            "c": 0.01,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 4.729999999999921,
-            "crossed": true,
-            "min_j": -0.0003093490744647704,
-            "v_peak": 0.015337399179525799,
-            "v_peak_over_c": 1.53373991795258,
-            "steps": 946,
-            "wall_s": 0.6543106700046337
-          },
-          {
-            "n": 128,
-            "c": 0.02,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 2.504999999999969,
-            "crossed": true,
-            "min_j": -1.4851372113772227e-05,
-            "v_peak": 0.030243737009844625,
-            "v_peak_over_c": 1.5121868504922311,
-            "steps": 501,
-            "wall_s": 0.3589109459935571
-          },
-          {
-            "n": 128,
-            "c": 0.05,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.6749999999999863,
-            "crossed": true,
-            "min_j": -0.003453040548001051,
-            "v_peak": 0.07501671907784492,
-            "v_peak_over_c": 1.5003343815568984,
-            "steps": 335,
-            "wall_s": 0.22957070499978727
-          },
-          {
-            "n": 128,
-            "c": 0.1,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.5349999999999893,
-            "crossed": true,
-            "min_j": -0.0021279178109459614,
-            "v_peak": 0.1485840848279096,
-            "v_peak_over_c": 1.485840848279096,
-            "steps": 307,
-            "wall_s": 0.21005025900376495
-          },
-          {
-            "n": 128,
-            "c": 0.2,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.4649999999999908,
-            "crossed": true,
-            "min_j": -0.0035949131987443803,
-            "v_peak": 0.29137913980284796,
-            "v_peak_over_c": 1.4568956990142397,
-            "steps": 293,
-            "wall_s": 0.20768235599825857
-          },
-          {
-            "n": 128,
-            "c": 0.5,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.2799999999999947,
-            "crossed": true,
-            "min_j": -0.0013446424510145962,
-            "v_peak": 0.6996040531880439,
-            "v_peak_over_c": 1.3992081063760877,
-            "steps": 256,
-            "wall_s": 0.17990589500550414
-          },
-          {
-            "n": 128,
-            "c": 1.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.314999999999994,
-            "crossed": true,
-            "min_j": -0.005683970929556959,
-            "v_peak": 1.2351345465729866,
-            "v_peak_over_c": 1.2351345465729866,
-            "steps": 263,
-            "wall_s": 0.18040130400186172
-          },
-          {
-            "n": 128,
-            "c": 2.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.2449999999999954,
-            "crossed": true,
-            "min_j": -0.005789607039423893,
-            "v_peak": 1.5564593858682545,
-            "v_peak_over_c": 0.7782296929341272,
-            "steps": 249,
-            "wall_s": 0.17195049799920525
-          },
-          {
-            "n": 128,
-            "c": 5.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.214999999999996,
-            "crossed": true,
-            "min_j": -0.0043408270714198945,
-            "v_peak": 1.5697611170025778,
-            "v_peak_over_c": 0.31395222340051554,
-            "steps": 243,
-            "wall_s": 0.16572904300119262
-          },
-          {
-            "n": 256,
-            "c": 0.005,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 5.959999999999895,
-            "crossed": true,
-            "min_j": -6.913732225586715e-05,
-            "v_peak": 0.008246172107109016,
-            "v_peak_over_c": 1.649234421421803,
-            "steps": 1192,
-            "wall_s": 3.0066824390014517
-          },
-          {
-            "n": 256,
-            "c": 0.01,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 3.0349999999999575,
-            "crossed": true,
-            "min_j": -0.0009902000088962057,
-            "v_peak": 0.01572428537765688,
-            "v_peak_over_c": 1.572428537765688,
-            "steps": 607,
-            "wall_s": 1.569298822003475
-          },
-          {
-            "n": 256,
-            "c": 0.02,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.924999999999981,
-            "crossed": true,
-            "min_j": -0.0019624215259987374,
-            "v_peak": 0.031016486202196346,
-            "v_peak_over_c": 1.5508243101098174,
-            "steps": 385,
-            "wall_s": 0.984687156000291
-          },
-          {
-            "n": 256,
-            "c": 0.05,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.6099999999999877,
-            "crossed": true,
-            "min_j": -0.0025041726891571483,
-            "v_peak": 0.07685760809989316,
-            "v_peak_over_c": 1.537152161997863,
-            "steps": 322,
-            "wall_s": 0.8281414360026247
-          },
-          {
-            "n": 256,
-            "c": 0.1,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.5199999999999896,
-            "crossed": true,
-            "min_j": -0.0018579045134762895,
-            "v_peak": 0.1518668013950263,
-            "v_peak_over_c": 1.518668013950263,
-            "steps": 304,
-            "wall_s": 0.7787315210007364
-          },
-          {
-            "n": 256,
-            "c": 0.2,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.454999999999991,
-            "crossed": true,
-            "min_j": -0.0004949840399200839,
-            "v_peak": 0.2963965236855224,
-            "v_peak_over_c": 1.481982618427612,
-            "steps": 291,
-            "wall_s": 0.744813024000905
-          },
-          {
-            "n": 256,
-            "c": 0.5,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.1899999999999966,
-            "crossed": true,
-            "min_j": -0.0013417007019933583,
-            "v_peak": 0.704658986560341,
-            "v_peak_over_c": 1.409317973120682,
-            "steps": 238,
-            "wall_s": 0.6124177609963226
-          },
-          {
-            "n": 256,
-            "c": 1.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.2999999999999943,
-            "crossed": true,
-            "min_j": -0.004818084394717075,
-            "v_peak": 1.244184087281979,
-            "v_peak_over_c": 1.244184087281979,
-            "steps": 260,
-            "wall_s": 0.6621491949990741
-          },
-          {
-            "n": 256,
-            "c": 2.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.2399999999999956,
-            "crossed": true,
-            "min_j": -0.0035023574983316487,
-            "v_peak": 1.5627255900327888,
-            "v_peak_over_c": 0.7813627950163944,
-            "steps": 248,
-            "wall_s": 0.6369675189998816
-          },
-          {
-            "n": 256,
-            "c": 5.0,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": true,
-            "t_cross": 1.2099999999999962,
-            "crossed": true,
-            "min_j": -0.0013754905104573134,
-            "v_peak": 1.5699978242250399,
-            "v_peak_over_c": 0.31399956484500796,
-            "steps": 242,
-            "wall_s": 0.6345393349984079
-          }
-        ],
-        "classical_reference": {
-          "64": {
-            "n": 64,
-            "c": null,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": false,
-            "t_cross": 1.219999999999996,
-            "crossed": true,
-            "min_j": -0.005387655098861096,
-            "v_peak": 1.5637358056250656,
-            "v_peak_over_c": null,
-            "steps": 244,
-            "wall_s": 0.06253218599886168
-          },
-          "128": {
-            "n": 128,
-            "c": null,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": false,
-            "t_cross": 1.214999999999996,
-            "crossed": true,
-            "min_j": -0.007228503030390434,
-            "v_peak": 1.5730848009735277,
-            "v_peak_over_c": null,
-            "steps": 243,
-            "wall_s": 0.17086393900535768
-          },
-          "256": {
-            "n": 256,
-            "c": null,
-            "h": 0.12,
-            "softening": 0.4,
-            "dt_max": 0.005,
-            "t_max": 8.0,
-            "damped": false,
-            "t_cross": 1.2099999999999962,
-            "crossed": true,
-            "min_j": -0.004232145880595174,
-            "v_peak": 1.5730350486079605,
-            "v_peak_over_c": null,
-            "steps": 242,
-            "wall_s": 0.6112589550029952
-          }
-        },
-        "sensitivity": {
-          "dt_max": [
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.02,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.739999999999987,
-              "crossed": true,
-              "min_j": -0.0009095206846765019,
-              "v_peak": 0.018790069000758917,
-              "v_peak_over_c": 1.8790069000758916,
-              "steps": 237,
-              "wall_s": 0.16525498699775198
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.01,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.729999999999944,
-              "crossed": true,
-              "min_j": -0.00027605353936876694,
-              "v_peak": 0.016112941591956528,
-              "v_peak_over_c": 1.6112941591956527,
-              "steps": 473,
-              "wall_s": 0.3286216990018147
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.729999999999921,
-              "crossed": true,
-              "min_j": -0.0003093490744647704,
-              "v_peak": 0.015337399179525799,
-              "v_peak_over_c": 1.53373991795258,
-              "steps": 946,
-              "wall_s": 0.6481281140004285
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.0025,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.727500000000039,
-              "crossed": true,
-              "min_j": -1.3216234149332808e-05,
-              "v_peak": 0.015134387449367662,
-              "v_peak_over_c": 1.5134387449367661,
-              "steps": 1891,
-              "wall_s": 1.2988479160048882
-            }
-          ],
-          "h": [
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.06,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.889999999999918,
-              "crossed": true,
-              "min_j": -4.597152757036564e-05,
-              "v_peak": 0.014667249712210097,
-              "v_peak_over_c": 1.4667249712210095,
-              "steps": 978,
-              "wall_s": 0.6626156749989605
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.09,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.78999999999992,
-              "crossed": true,
-              "min_j": -0.00039889732839410905,
-              "v_peak": 0.015099505922897778,
-              "v_peak_over_c": 1.5099505922897778,
-              "steps": 958,
-              "wall_s": 0.6599043999958667
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.729999999999921,
-              "crossed": true,
-              "min_j": -0.0003093490744647704,
-              "v_peak": 0.015337399179525799,
-              "v_peak_over_c": 1.53373991795258,
-              "steps": 946,
-              "wall_s": 0.6740422769944416
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.18,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.664999999999923,
-              "crossed": true,
-              "min_j": -0.0005706963529476894,
-              "v_peak": 0.015592352911885751,
-              "v_peak_over_c": 1.5592352911885752,
-              "steps": 933,
-              "wall_s": 0.6655521909997333
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.24,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.624999999999924,
-              "crossed": true,
-              "min_j": -0.00033961447615243185,
-              "v_peak": 0.015726848427152204,
-              "v_peak_over_c": 1.5726848427152205,
-              "steps": 925,
-              "wall_s": 0.6361418050000793
-            }
-          ],
-          "softening": [
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.2,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 3.7899999999999414,
-              "crossed": true,
-              "min_j": -0.00017320640292950706,
-              "v_peak": 0.020724908411970375,
-              "v_peak_over_c": 2.0724908411970375,
-              "steps": 758,
-              "wall_s": 0.5341350829985458
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.3,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.374999999999929,
-              "crossed": true,
-              "min_j": -7.724104674987556e-05,
-              "v_peak": 0.017381961980686134,
-              "v_peak_over_c": 1.7381961980686134,
-              "steps": 875,
-              "wall_s": 0.5979671140012215
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 4.729999999999921,
-              "crossed": true,
-              "min_j": -0.0003093490744647704,
-              "v_peak": 0.015337399179525799,
-              "v_peak_over_c": 1.53373991795258,
-              "steps": 946,
-              "wall_s": 0.64950948600017
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.6,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 5.299999999999909,
-              "crossed": true,
-              "min_j": -0.000412547011758649,
-              "v_peak": 0.012758805499161183,
-              "v_peak_over_c": 1.2758805499161183,
-              "steps": 1060,
-              "wall_s": 0.7316845950044808
-            },
-            {
-              "n": 128,
-              "c": 0.01,
-              "h": 0.12,
-              "softening": 0.8,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": true,
-              "t_cross": 5.889999999999897,
-              "crossed": true,
-              "min_j": -6.066976852114234e-05,
-              "v_peak": 0.01107666404287206,
-              "v_peak_over_c": 1.107666404287206,
-              "steps": 1178,
-              "wall_s": 0.8148278129956452
-            }
-          ]
-        },
-        "sensitivity_classical": {
-          "dt_max": [
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.02,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.2200000000000006,
-              "crossed": true,
-              "min_j": -0.015045059347109323,
-              "v_peak": 1.5816376442134614,
-              "v_peak_over_c": null,
-              "steps": 61,
-              "wall_s": 0.0432104160063318
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.01,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.2200000000000009,
-              "crossed": true,
-              "min_j": -0.01501170135852038,
-              "v_peak": 1.5818273027948229,
-              "v_peak_over_c": null,
-              "steps": 122,
-              "wall_s": 0.08387736000440782
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.1659692660032306
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.0025,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.2124999999999853,
-              "crossed": true,
-              "min_j": -0.0033383163588571454,
-              "v_peak": 1.5686398681351854,
-              "v_peak_over_c": null,
-              "steps": 485,
-              "wall_s": 0.3317784360042424
-            }
-          ],
-          "h": [
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.06,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.1741424680003547
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.09,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.16951183900528122
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.17025979200116126
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.18,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.1743725580017781
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.24,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.1691081990065868
-            }
-          ],
-          "softening": [
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.2,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 0.6300000000000004,
-              "crossed": true,
-              "min_j": -0.00216294775453094,
-              "v_peak": 1.7326690483301024,
-              "v_peak_over_c": null,
-              "steps": 126,
-              "wall_s": 0.09172689400293166
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.3,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 0.9350000000000007,
-              "crossed": true,
-              "min_j": -0.007745757161601294,
-              "v_peak": 1.6754697383111667,
-              "v_peak_over_c": null,
-              "steps": 187,
-              "wall_s": 0.12766366300638765
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.4,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.214999999999996,
-              "crossed": true,
-              "min_j": -0.007228503030390434,
-              "v_peak": 1.5730848009735277,
-              "v_peak_over_c": null,
-              "steps": 243,
-              "wall_s": 0.16488898700481514
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.6,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.644999999999987,
-              "crossed": true,
-              "min_j": -0.0050057049515280765,
-              "v_peak": 1.1564094585692182,
-              "v_peak_over_c": null,
-              "steps": 329,
-              "wall_s": 0.23470067999733146
-            },
-            {
-              "n": 128,
-              "c": null,
-              "h": 0.12,
-              "softening": 0.8,
-              "dt_max": 0.005,
-              "t_max": 8.0,
-              "damped": false,
-              "t_cross": 1.9999999999999793,
-              "crossed": true,
-              "min_j": -0.0035722069996167046,
-              "v_peak": 0.8617905610211554,
-              "v_peak_over_c": null,
-              "steps": 400,
-              "wall_s": 0.2753883639961714
-            }
-          ]
-        },
-        "params": {
-          "quick": false,
-          "c_values": [
-            0.005,
-            0.01,
-            0.02,
-            0.05,
-            0.1,
-            0.2,
-            0.5,
-            1.0,
-            2.0,
-            5.0
-          ],
-          "n_values": [
-            64,
-            128,
-            256
-          ],
-          "t_max": 8.0,
-          "dt_max": 0.005,
-          "h": 0.12,
-          "softening": 0.4,
-          "baseline_n": 128,
-          "baseline_c": 0.01,
-          "dt_values": [
-            0.02,
-            0.01,
-            0.005,
-            0.0025
-          ],
-          "h_values": [
-            0.06,
-            0.09,
-            0.12,
-            0.18,
-            0.24
-          ],
-          "softening_values": [
-            0.2,
-            0.3,
-            0.4,
-            0.6,
-            0.8
-          ],
-          "G": 1.0,
-          "M": 1.0,
-          "L": 1.0
-        }
-      },
-      "checks": {
-        "all_runs_finite": true,
-        "classical_reference_crosses": true,
-        "speed_cap_near_c": true
-      },
-      "figures": [
-        "assets/02_shell_crossing_sweep.png"
-      ]
-    },
-    {
-      "command": "compare:fluid",
-      "timestamp_utc": "2026-09-12T03:33:54+00:00",
-      "argv": [
-        "run-all",
-        "--output",
-        "assets"
-      ],
-      "git": {
-        "commit": "09011f886d3d6f9112c0e4b308b2ad472a2d0aff",
-        "dirty": false,
-        "root": "/projects/Navier\u2013Stokes/moss-reg"
-      },
-      "environment": {
-        "moss_reg": "0.3.0",
-        "python": "3.14.7",
-        "numpy": "2.4.6",
-        "scipy": "1.16.2",
-        "matplotlib": "3.11.2",
-        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
-      },
-      "params": {
-        "n": 64,
-        "lam": 0.5,
-        "re": 200.0,
-        "nu": 0.005,
-        "t_max": 10.0,
-        "dt_max": 0.005
-      },
-      "metrics": {
-        "n": 64,
-        "re": 200.0,
-        "nu": 0.005,
-        "lam": 0.5,
-        "exact_decay_energy_err": 4.992285085339016e-15,
-        "exact_decay_enstrophy_err": 4.989290612719432e-15,
-        "energy_identity_residual": 4.483327567805784e-07,
-        "dt_limits_initial": {
-          "advection": 0.023518021709589932,
-          "viscosity": 0.44247787610619466,
-          "damping": 0.6666666666666666
-        },
-        "dt_min_used": 0.004999999999837357,
-        "E_classical_final": 0.20468268826949643,
-        "E_moss_final": 0.031857822429750715,
-        "energy_budget_moss": {
-          "E0": 0.25,
-          "E_final": 0.031857822429750715,
-          "D_visc_final": 0.015927791803029317,
-          "E_vac_final": 0.20221483409997623,
-          "residual_final": 4.4833275625322244e-07,
-          "max_abs_residual": 4.4833275625322244e-07,
-          "vac_fraction": 0.9269864102042169
-        },
-        "timeseries_csv": [
-          "assets/03_cfd_classical_timeseries.csv",
-          "assets/03_cfd_moss_timeseries.csv"
-        ],
-        "steps_classical": 2000,
-        "steps_moss": 2000,
-        "params": {
-          "n": 64,
-          "lam": 0.5,
-          "re": 200.0,
-          "nu": 0.005,
-          "t_max": 10.0,
-          "dt_max": 0.005
-        }
-      },
-      "checks": {
-        "taylor_green_exact_decay": true,
-        "energy_identity": true,
-        "energy_budget_closed": true,
-        "energy_monotone_classical": true,
-        "energy_monotone_moss": true
-      },
-      "figures": [
-        "assets/03_cfd_stability.png"
-      ]
-    },
-    {
-      "command": "compare:fluid3d",
-      "timestamp_utc": "2026-09-12T03:35:25+00:00",
-      "argv": [
-        "run-all",
-        "--output",
-        "assets"
-      ],
-      "git": {
-        "commit": "09011f886d3d6f9112c0e4b308b2ad472a2d0aff",
-        "dirty": false,
-        "root": "/projects/Navier\u2013Stokes/moss-reg"
-      },
-      "environment": {
-        "moss_reg": "0.3.0",
-        "python": "3.14.7",
-        "numpy": "2.4.6",
-        "scipy": "1.16.2",
-        "matplotlib": "3.11.2",
-        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
-      },
-      "params": {
-        "n": 32,
-        "lam": 0.5,
-        "re": 800.0,
-        "nu": 0.00125,
-        "t_max": 6.0,
-        "dt_max": 0.01
-      },
-      "metrics": {
-        "n": 32,
-        "re": 800.0,
-        "nu": 0.00125,
-        "lam": 0.5,
-        "enstrophy_peak_classical": 3.209048425849662,
-        "enstrophy_peak_time_classical": 6.0,
-        "enstrophy_peak_moss": 0.4150316790352781,
-        "enstrophy_peak_time_moss": 6.0,
-        "omega_max_peak_classical": 9.919091641845686,
-        "omega_max_peak_moss": 3.349712091532526,
-        "kmax_eta_min_classical": 0.23612537552885118,
-        "kmax_eta_min_moss": 0.3937462380850027,
-        "tail_fraction_max_classical": 0.18661745943370261,
-        "tail_fraction_max_moss": 0.025173533997009306,
-        "classical_under_resolved_from_t": 2.3799999999999932,
-        "classical_under_resolved": true,
-        "moss_under_resolved": true,
-        "E_final_classical": 0.1078289030996547,
-        "E_final_moss": 0.03834164639386296,
-        "energy_budget_classical": {
-          "E0": 0.12499999999999999,
-          "E_final": 0.1078289030996547,
-          "D_visc_final": 0.01717112038622196,
-          "E_vac_final": 0.0,
-          "residual_final": 2.3485876677470374e-08,
-          "max_abs_residual": 2.5619689474065677e-08,
-          "vac_fraction": 0.0
-        },
-        "energy_budget_moss": {
-          "E0": 0.12499999999999999,
-          "E_final": 0.03834164639386296,
-          "D_visc_final": 0.005114953015180616,
-          "E_vac_final": 0.08154394689397103,
-          "residual_final": 5.463030146174441e-07,
-          "max_abs_residual": 5.463030146174441e-07,
-          "vac_fraction": 0.9409819538528159
-        },
-        "steps_classical": 601,
-        "steps_moss": 601,
-        "wall_classical_s": 25.239027142997656,
-        "wall_moss_s": 64.65042867099692,
-        "timeseries_csv": [
-          "assets/05_tg3d_classical_timeseries.csv",
-          "assets/05_tg3d_moss_timeseries.csv"
-        ],
-        "params": {
-          "n": 32,
-          "lam": 0.5,
-          "re": 800.0,
-          "nu": 0.00125,
-          "t_max": 6.0,
-          "dt_max": 0.01
-        }
-      },
-      "checks": {
-        "energy_budget_classical": true,
-        "energy_budget_moss": true,
-        "divergence_free": true,
-        "all_finite": true
-      },
-      "figures": [
-        "assets/05_tg3d.png"
-      ]
-    },
-    {
-      "command": "validate",
-      "timestamp_utc": "2026-09-12T03:35:29+00:00",
-      "argv": [
-        "run-all",
-        "--output",
-        "assets"
-      ],
-      "git": {
-        "commit": "09011f886d3d6f9112c0e4b308b2ad472a2d0aff",
-        "dirty": false,
-        "root": "/projects/Navier\u2013Stokes/moss-reg"
-      },
-      "environment": {
-        "moss_reg": "0.3.0",
-        "python": "3.14.7",
-        "numpy": "2.4.6",
-        "scipy": "1.16.2",
-        "matplotlib": "3.11.2",
-        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
-      },
-      "params": {},
-      "metrics": {
-        "failed": false,
-        "results": [
-          {
-            "group": "formulas",
-            "name": "lambda = G/c^3 has dimension s kg^-1",
-            "status": "PASS",
-            "detail": "[lambda] = kg^-1 s",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "lambda * F_P is dimensionless and equals 1",
-            "status": "PASS",
-            "detail": "lambda * F_P = 1 [1]",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "Xi = c^4/(8 pi G) has the dimension of a force (kg m s^-2)",
-            "status": "PASS",
-            "detail": "[Xi] = kg m s^-2; Xi = 4.81545e+42",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "Xi is NOT a pressure / energy density (Pa)",
-            "status": "PASS",
-            "detail": "[Xi] = kg m s^-2, [Pa] = kg m^-1 s^-2",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "1/(8 pi Xi c) equals G/c^5 (value and dimension)",
-            "status": "PASS",
-            "detail": "1/(8 pi Xi c) = 2.75615e-53 [kg^-1 m^-2 s^3]; G/c^5 = 2.75615e-53 [kg^-1 m^-2 s^3]",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "identity lambda = 1/(8 pi Xi c) is rejected (differs by c^2)",
-            "status": "PASS",
-            "detail": "[lambda] = kg^-1 s, [1/(8 pi Xi c)] = kg^-1 m^-2 s^3",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "Planck length / time / mass have dimensions m / s / kg",
-            "status": "PASS",
-            "detail": "l_P = 1.61626e-35 [m], t_P = 5.39125e-44 [s], m_P = 2.17643e-08 [kg]",
-            "seconds": 0.0
-          },
-          {
-            "group": "formulas",
-            "name": "ODE coupling: [G rho / c^3] == [s m^-2] required by dv/dt = -lambda_eff |v|^2 v",
-            "status": "XFAIL",
-            "detail": "[G rho/c^3] = m^-3 s, required m^-2 s: one power of length is missing in the SI form (open issue)",
-            "seconds": 0.0
-          },
-          {
-            "group": "damping",
-            "name": "exact solution matches closed form",
-            "status": "PASS",
-            "detail": "max rel err 0.0e+00",
-            "seconds": 0.00033034299849532545
-          },
-          {
-            "group": "damping",
-            "name": "exact flow composes: phi_a o phi_b = phi_(a+b)",
-            "status": "PASS",
-            "detail": "phi_a o phi_b vs phi_(a+b): max rel err 3.6e-16",
-            "seconds": 0.0001349500016658567
-          },
-          {
-            "group": "damping",
-            "name": "particle integrator: v(T) = v0/sqrt(1+2 lam v0^2 T) for any dt",
-            "status": "PASS",
-            "detail": "v(T) vs 1/sqrt(1+2 lam v0^2 T): max rel err 7.0e-16 (0.1.0 value would be 0.2928 vs 0.3974)",
-            "seconds": 0.007626594000612386
-          },
-          {
-            "group": "damping",
-            "name": "explicit Euler is first order",
-            "status": "PASS",
-            "detail": "error slope 1.003 (expect 1)",
-            "seconds": 0.00622646500414703
-          },
-          {
-            "group": "convergence",
-            "name": "KDK gravity integrator is second order (two-body)",
-            "status": "PASS",
-            "detail": "error ratios per dt halving [3.99, 4.0] (expect 4)",
-            "seconds": 0.3631331200012937
-          },
-          {
-            "group": "convergence",
-            "name": "spectral RK4 is fourth order (damped Taylor-Green)",
-            "status": "PASS",
-            "detail": "E(T) error ratios per dt halving [19.9, 18.2] (expect 16)",
-            "seconds": 0.7750011409953004
-          },
-          {
-            "group": "particles",
-            "name": "cubic spline kernels are normalized (1D, 3D)",
-            "status": "PASS",
-            "detail": "int W dV: 1D 1.000000, 3D 1.000000",
-            "seconds": 0.0024050769934547134
-          },
-          {
-            "group": "particles",
-            "name": "dense and cKDTree density estimates agree",
-            "status": "PASS",
-            "detail": "dense vs cKDTree density: max abs diff 8.5e-14",
-            "seconds": 0.00930859700019937
-          },
-          {
-            "group": "particles",
-            "name": "dense and loop gravity agree",
-            "status": "PASS",
-            "detail": "dense vs loop gravity: max abs diff 0.0e+00",
-            "seconds": 0.0013157580033293925
-          },
-          {
-            "group": "particles",
-            "name": "Jacobian monitor: linear maps, crossing detection",
-            "status": "PASS",
-            "detail": "1D scaling J = 0.400, swap detected True, 3D det 8.000000 (expect 8)",
-            "seconds": 0.013425846998870838
-          },
-          {
-            "group": "particles",
-            "name": "undamped 1D cold collapse shell-crosses (J <= 0)",
-            "status": "PASS",
-            "detail": "min J -1.005, crossing at t = 1.219999999999996, v_ff 1.671",
-            "seconds": 0.09847709200403187
-          },
-          {
-            "group": "particles",
-            "name": "damped collapse (c = 0.01): speed capped near c",
-            "status": "PASS",
-            "detail": "c = 0.01: peak |v| / c = 1.47 (cubic damping caps speed near c)",
-            "seconds": 0.1473065559985116
-          },
-          {
-            "group": "particles",
-            "name": "physical regime (v_ff < c): damping does not prevent crossing",
-            "status": "PASS",
-            "detail": "c = 2 (v_ff/c = 0.77 < 1): crossing at t = 1.2499999999999953, min J -0.829",
-            "seconds": 0.09917492100066738
-          },
-          {
-            "group": "fluid",
-            "name": "Taylor-Green viscous eigenmode decays exactly",
-            "status": "PASS",
-            "detail": "max rel err vs exp(-4 nu t): 2.2e-15",
-            "seconds": 0.4450595680027618
-          },
-          {
-            "group": "fluid",
-            "name": "flow stays divergence-free with damping",
-            "status": "PASS",
-            "detail": "max |div u| = 4.5e-15",
-            "seconds": 0.08164847100124462
-          },
-          {
-            "group": "fluid",
-            "name": "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4",
-            "status": "PASS",
-            "detail": "E(T) - [E0 - int(2 nu Omega + lam ||u||_4^4)] = +4.1e-07 (every-step trapezoid)",
-            "seconds": 0.739548448997084
-          },
-          {
-            "group": "fluid",
-            "name": "cubic damping term dealiased (2/3 rule alone is not enough)",
-            "status": "PASS",
-            "detail": "aliased |k|=3 amplitude: 2/3 rule 0.1250, padded 6.1e-16",
-            "seconds": 0.0016215380019275472
-          },
-          {
-            "group": "fluid",
-            "name": "cfl_dt includes the cubic damping stiffness limit",
-            "status": "PASS",
-            "detail": "dt_damp = 1.67e-03 (2 cfl / 3 lam |u|^2 = 1.67e-03), cfl_dt = 1.67e-03",
-            "seconds": 0.0003237549972254783
-          },
-          {
-            "group": "fluid3d",
-            "name": "3D shear mode u = sin y decays exactly",
-            "status": "PASS",
-            "detail": "u = sin y exp(-nu t): max abs err 2.2e-16",
-            "seconds": 0.3967116720014019
-          },
-          {
-            "group": "fluid3d",
-            "name": "3D Taylor-Green: energy budget closes, divergence-free",
-            "status": "PASS",
-            "detail": "3D Taylor-Green: budget residual 3.4e-07, E_vac 2.235e-02, max |div u| 2.3e-15",
-            "seconds": 0.6040162170029362
-          },
-          {
-            "group": "fluid3d",
-            "name": "3D cubic damping term dealiased",
-            "status": "PASS",
-            "detail": "aliased |k|=1 amplitude: 2/3 rule 0.1250, padded 1.5e-16",
-            "seconds": 0.004896368998743128
-          },
-          {
-            "group": "invariants",
-            "name": "particles: E_kin + E_pot + E_vac conserved to O(dt^2)",
-            "status": "PASS",
-            "detail": "E_kin + E_pot + E_vac drift 9.91e-04 -> 2.53e-04 per dt halving (ratio 3.92, expect 4); E_vac = 4.014e-02",
-            "seconds": 0.02985756100679282
-          }
-        ]
-      },
-      "checks": {
-        "lambda = G/c^3 has dimension s kg^-1": "PASS",
-        "lambda * F_P is dimensionless and equals 1": "PASS",
-        "Xi = c^4/(8 pi G) has the dimension of a force (kg m s^-2)": "PASS",
-        "Xi is NOT a pressure / energy density (Pa)": "PASS",
-        "1/(8 pi Xi c) equals G/c^5 (value and dimension)": "PASS",
-        "identity lambda = 1/(8 pi Xi c) is rejected (differs by c^2)": "PASS",
-        "Planck length / time / mass have dimensions m / s / kg": "PASS",
-        "ODE coupling: [G rho / c^3] == [s m^-2] required by dv/dt = -lambda_eff |v|^2 v": "XFAIL",
-        "exact solution matches closed form": "PASS",
-        "exact flow composes: phi_a o phi_b = phi_(a+b)": "PASS",
-        "particle integrator: v(T) = v0/sqrt(1+2 lam v0^2 T) for any dt": "PASS",
-        "explicit Euler is first order": "PASS",
-        "KDK gravity integrator is second order (two-body)": "PASS",
-        "spectral RK4 is fourth order (damped Taylor-Green)": "PASS",
-        "cubic spline kernels are normalized (1D, 3D)": "PASS",
-        "dense and cKDTree density estimates agree": "PASS",
-        "dense and loop gravity agree": "PASS",
-        "Jacobian monitor: linear maps, crossing detection": "PASS",
-        "undamped 1D cold collapse shell-crosses (J <= 0)": "PASS",
-        "damped collapse (c = 0.01): speed capped near c": "PASS",
-        "physical regime (v_ff < c): damping does not prevent crossing": "PASS",
-        "Taylor-Green viscous eigenmode decays exactly": "PASS",
-        "flow stays divergence-free with damping": "PASS",
-        "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4": "PASS",
-        "cubic damping term dealiased (2/3 rule alone is not enough)": "PASS",
-        "cfl_dt includes the cubic damping stiffness limit": "PASS",
-        "3D shear mode u = sin y decays exactly": "PASS",
-        "3D Taylor-Green: energy budget closes, divergence-free": "PASS",
-        "3D cubic damping term dealiased": "PASS",
-        "particles: E_kin + E_pot + E_vac conserved to O(dt^2)": "PASS"
-      },
-      "figures": []
-    },
-    {
       "command": "sweep:fluid3d",
       "timestamp_utc": "2026-09-12T12:24:43+00:00",
       "argv": [
@@ -2185,7 +462,1736 @@
       "figures": [
         "assets/06_tg3d_sweep.png"
       ]
+    },
+    {
+      "command": "decay",
+      "timestamp_utc": "2026-09-12T12:26:27+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "89a837722d848c922cb5b35e7f74f762223a9a06",
+        "dirty": false,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.4.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {
+        "lambda_eff": 1.0,
+        "v0": [
+          1.0,
+          0.25,
+          -0.5
+        ],
+        "t_max": 4.0,
+        "dt_max": 0.02
+      },
+      "metrics": {
+        "speed0": 1.14564392373896,
+        "lambda": 1.0,
+        "euler_slope": 1.0303058782247174,
+        "params": {
+          "lambda_eff": 1.0,
+          "v0": [
+            1.0,
+            0.25,
+            -0.5
+          ],
+          "t_max": 4.0,
+          "dt_max": 0.02
+        }
+      },
+      "checks": {
+        "euler_first_order": true
+      },
+      "figures": [
+        "assets/01_velocity_decay.png"
+      ]
+    },
+    {
+      "command": "compare:particles",
+      "timestamp_utc": "2026-09-12T12:26:31+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "89a837722d848c922cb5b35e7f74f762223a9a06",
+        "dirty": false,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.4.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {
+        "n": 200,
+        "c": 3.162277660168379,
+        "compactness": 0.10000000000000002,
+        "t_max": 6.0,
+        "dt_max": 0.005,
+        "softening": 0.4,
+        "h": 0.12,
+        "G": 1.0,
+        "M": 1.0,
+        "L": 1.0
+      },
+      "metrics": {
+        "n": 200,
+        "c": 3.162277660168379,
+        "compactness": 0.10000000000000002,
+        "regime": "physical (v_ff < c)",
+        "v_ff": 1.5705568465749749,
+        "v_ff_over_c": 0.496653682994854,
+        "crossing_time_classical": 1.2099999999999962,
+        "crossing_time_moss": 1.219999999999996,
+        "crossing_delay": 0.009999999999999787,
+        "min_jacobian_moss": -4.396424649553703,
+        "vpeak_moss": 1.6440374493187788,
+        "vpeak_moss_over_c": 0.5198902898460979,
+        "vfinal_moss": 1.2666356279295032,
+        "steps_classical": 242,
+        "steps_moss": 1201,
+        "E_vac_moss_final": 0.10343692781009808,
+        "E_total_drift_moss": 3.123343056010697e-05,
+        "timeseries_csv": [
+          "assets/02_shell_crossing_classical_timeseries.csv",
+          "assets/02_shell_crossing_moss_timeseries.csv"
+        ],
+        "params": {
+          "n": 200,
+          "c": 3.162277660168379,
+          "compactness": 0.10000000000000002,
+          "t_max": 6.0,
+          "dt_max": 0.005,
+          "softening": 0.4,
+          "h": 0.12,
+          "G": 1.0,
+          "M": 1.0,
+          "L": 1.0
+        }
+      },
+      "checks": {
+        "undamped_crossing_detected": true,
+        "jacobian_histories_finite": true,
+        "damped_speed_bounded": true,
+        "energy_invariant_moss": true
+      },
+      "figures": [
+        "assets/02_shell_crossing_arrest.png"
+      ]
+    },
+    {
+      "command": "sweep:particles",
+      "timestamp_utc": "2026-09-12T12:26:59+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "89a837722d848c922cb5b35e7f74f762223a9a06",
+        "dirty": false,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.4.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {
+        "quick": false,
+        "c_values": [
+          0.005,
+          0.01,
+          0.02,
+          0.05,
+          0.1,
+          0.2,
+          0.5,
+          1.0,
+          2.0,
+          5.0
+        ],
+        "n_values": [
+          64,
+          128,
+          256
+        ],
+        "t_max": 8.0,
+        "dt_max": 0.005,
+        "h": 0.12,
+        "softening": 0.4,
+        "baseline_n": 128,
+        "baseline_c": 0.01,
+        "dt_values": [
+          0.02,
+          0.01,
+          0.005,
+          0.0025
+        ],
+        "h_values": [
+          0.06,
+          0.09,
+          0.12,
+          0.18,
+          0.24
+        ],
+        "softening_values": [
+          0.2,
+          0.3,
+          0.4,
+          0.6,
+          0.8
+        ],
+        "G": 1.0,
+        "M": 1.0,
+        "L": 1.0
+      },
+      "metrics": {
+        "v_ff": 1.5699518850688514,
+        "speed_cap_ratio_median": 1.518668013950263,
+        "no_crossing_within_horizon": [
+          [
+            64,
+            0.005
+          ],
+          [
+            128,
+            0.005
+          ]
+        ],
+        "crossing_time_monotone_in_n_at_baseline": true,
+        "baseline_crossing_times_by_n": {
+          "64": 7.59499999999986,
+          "128": 4.729999999999921,
+          "256": 3.0349999999999575
+        },
+        "physical_regime_max_delay": 0.02999999999999936,
+        "conclusion": "damped runs are speed-limited at |v| ~ 1.52 c; crossing is delayed by ~ (particle spacing)/c and moves earlier as N grows (monotone at c = 0.01); in the physical regime c >= v_ff the maximal delay is 0.03 time units (2 of 30 runs show no crossing within t = 8, all at c < v_ff)",
+        "wall_s": 28.13475428998936,
+        "runs": [
+          {
+            "n": 64,
+            "c": 0.005,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": null,
+            "crossed": false,
+            "min_j": 0.3571272765611126,
+            "v_peak": 0.00772884525786594,
+            "v_peak_over_c": 1.5457690515731881,
+            "steps": 1601,
+            "wall_s": 0.4065801830001874
+          },
+          {
+            "n": 64,
+            "c": 0.01,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 7.59499999999986,
+            "crossed": true,
+            "min_j": -0.0002329340502770954,
+            "v_peak": 0.014659316279896549,
+            "v_peak_over_c": 1.4659316279896548,
+            "steps": 1519,
+            "wall_s": 0.39291561501158867
+          },
+          {
+            "n": 64,
+            "c": 0.02,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 3.7949999999999413,
+            "crossed": true,
+            "min_j": -0.0006178673368979401,
+            "v_peak": 0.02888709170103876,
+            "v_peak_over_c": 1.444354585051938,
+            "steps": 759,
+            "wall_s": 0.1945394380018115
+          },
+          {
+            "n": 64,
+            "c": 0.05,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.8999999999999815,
+            "crossed": true,
+            "min_j": -0.0027052894090109714,
+            "v_peak": 0.07176173165577517,
+            "v_peak_over_c": 1.4352346331155033,
+            "steps": 380,
+            "wall_s": 0.09733960700395983
+          },
+          {
+            "n": 64,
+            "c": 0.1,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.5799999999999883,
+            "crossed": true,
+            "min_j": -0.001394499509544664,
+            "v_peak": 0.14270916002523226,
+            "v_peak_over_c": 1.4270916002523226,
+            "steps": 316,
+            "wall_s": 0.08061039500171319
+          },
+          {
+            "n": 64,
+            "c": 0.2,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.4849999999999903,
+            "crossed": true,
+            "min_j": -0.006369195917862635,
+            "v_peak": 0.28226566897918787,
+            "v_peak_over_c": 1.4113283448959393,
+            "steps": 297,
+            "wall_s": 0.07528444299532566
+          },
+          {
+            "n": 64,
+            "c": 0.5,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.4149999999999918,
+            "crossed": true,
+            "min_j": -0.0013326440157269376,
+            "v_peak": 0.6911541218657129,
+            "v_peak_over_c": 1.3823082437314258,
+            "steps": 283,
+            "wall_s": 0.07222290299250744
+          },
+          {
+            "n": 64,
+            "c": 1.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.3499999999999932,
+            "crossed": true,
+            "min_j": -0.00247900370302534,
+            "v_peak": 1.2173956600218958,
+            "v_peak_over_c": 1.2173956600218958,
+            "steps": 270,
+            "wall_s": 0.06832477699208539
+          },
+          {
+            "n": 64,
+            "c": 2.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.2499999999999953,
+            "crossed": true,
+            "min_j": -0.0036737560523421517,
+            "v_peak": 1.5388799491337393,
+            "v_peak_over_c": 0.7694399745668696,
+            "steps": 250,
+            "wall_s": 0.06348603499645833
+          },
+          {
+            "n": 64,
+            "c": 5.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.219999999999996,
+            "crossed": true,
+            "min_j": -0.0025384663157326398,
+            "v_peak": 1.5599329678385818,
+            "v_peak_over_c": 0.31198659356771635,
+            "steps": 244,
+            "wall_s": 0.07017396298761014
+          },
+          {
+            "n": 128,
+            "c": 0.005,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": null,
+            "crossed": false,
+            "min_j": 0.09085405965752863,
+            "v_peak": 0.008058221273903664,
+            "v_peak_over_c": 1.6116442547807328,
+            "steps": 1601,
+            "wall_s": 1.0960828380048042
+          },
+          {
+            "n": 128,
+            "c": 0.01,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 4.729999999999921,
+            "crossed": true,
+            "min_j": -0.0003093490744647704,
+            "v_peak": 0.015337399179525799,
+            "v_peak_over_c": 1.53373991795258,
+            "steps": 946,
+            "wall_s": 0.6584993919968838
+          },
+          {
+            "n": 128,
+            "c": 0.02,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 2.504999999999969,
+            "crossed": true,
+            "min_j": -1.4851372113772227e-05,
+            "v_peak": 0.030243737009844625,
+            "v_peak_over_c": 1.5121868504922311,
+            "steps": 501,
+            "wall_s": 0.3528948859893717
+          },
+          {
+            "n": 128,
+            "c": 0.05,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.6749999999999863,
+            "crossed": true,
+            "min_j": -0.003453040548001051,
+            "v_peak": 0.07501671907784492,
+            "v_peak_over_c": 1.5003343815568984,
+            "steps": 335,
+            "wall_s": 0.22721484499925282
+          },
+          {
+            "n": 128,
+            "c": 0.1,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.5349999999999893,
+            "crossed": true,
+            "min_j": -0.0021279178109459614,
+            "v_peak": 0.1485840848279096,
+            "v_peak_over_c": 1.485840848279096,
+            "steps": 307,
+            "wall_s": 0.20725904899882153
+          },
+          {
+            "n": 128,
+            "c": 0.2,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.4649999999999908,
+            "crossed": true,
+            "min_j": -0.0035949131987443803,
+            "v_peak": 0.29137913980284796,
+            "v_peak_over_c": 1.4568956990142397,
+            "steps": 293,
+            "wall_s": 0.1974446449894458
+          },
+          {
+            "n": 128,
+            "c": 0.5,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.2799999999999947,
+            "crossed": true,
+            "min_j": -0.0013446424510145962,
+            "v_peak": 0.6996040531880439,
+            "v_peak_over_c": 1.3992081063760877,
+            "steps": 256,
+            "wall_s": 0.17264948699448723
+          },
+          {
+            "n": 128,
+            "c": 1.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.314999999999994,
+            "crossed": true,
+            "min_j": -0.005683970929556959,
+            "v_peak": 1.2351345465729866,
+            "v_peak_over_c": 1.2351345465729866,
+            "steps": 263,
+            "wall_s": 0.18287315798806958
+          },
+          {
+            "n": 128,
+            "c": 2.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.2449999999999954,
+            "crossed": true,
+            "min_j": -0.005789607039423893,
+            "v_peak": 1.5564593858682545,
+            "v_peak_over_c": 0.7782296929341272,
+            "steps": 249,
+            "wall_s": 0.1718716440082062
+          },
+          {
+            "n": 128,
+            "c": 5.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.214999999999996,
+            "crossed": true,
+            "min_j": -0.0043408270714198945,
+            "v_peak": 1.5697611170025778,
+            "v_peak_over_c": 0.31395222340051554,
+            "steps": 243,
+            "wall_s": 0.16756280399567913
+          },
+          {
+            "n": 256,
+            "c": 0.005,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 5.959999999999895,
+            "crossed": true,
+            "min_j": -6.913732225586715e-05,
+            "v_peak": 0.008246172107109016,
+            "v_peak_over_c": 1.649234421421803,
+            "steps": 1192,
+            "wall_s": 3.026520924991928
+          },
+          {
+            "n": 256,
+            "c": 0.01,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 3.0349999999999575,
+            "crossed": true,
+            "min_j": -0.0009902000088962057,
+            "v_peak": 0.01572428537765688,
+            "v_peak_over_c": 1.572428537765688,
+            "steps": 607,
+            "wall_s": 1.5413948030036408
+          },
+          {
+            "n": 256,
+            "c": 0.02,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.924999999999981,
+            "crossed": true,
+            "min_j": -0.0019624215259987374,
+            "v_peak": 0.031016486202196346,
+            "v_peak_over_c": 1.5508243101098174,
+            "steps": 385,
+            "wall_s": 0.9740133770101238
+          },
+          {
+            "n": 256,
+            "c": 0.05,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.6099999999999877,
+            "crossed": true,
+            "min_j": -0.0025041726891571483,
+            "v_peak": 0.07685760809989316,
+            "v_peak_over_c": 1.537152161997863,
+            "steps": 322,
+            "wall_s": 0.8172215939994203
+          },
+          {
+            "n": 256,
+            "c": 0.1,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.5199999999999896,
+            "crossed": true,
+            "min_j": -0.0018579045134762895,
+            "v_peak": 0.1518668013950263,
+            "v_peak_over_c": 1.518668013950263,
+            "steps": 304,
+            "wall_s": 0.7688513460016111
+          },
+          {
+            "n": 256,
+            "c": 0.2,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.454999999999991,
+            "crossed": true,
+            "min_j": -0.0004949840399200839,
+            "v_peak": 0.2963965236855224,
+            "v_peak_over_c": 1.481982618427612,
+            "steps": 291,
+            "wall_s": 0.7384917680028593
+          },
+          {
+            "n": 256,
+            "c": 0.5,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.1899999999999966,
+            "crossed": true,
+            "min_j": -0.0013417007019933583,
+            "v_peak": 0.704658986560341,
+            "v_peak_over_c": 1.409317973120682,
+            "steps": 238,
+            "wall_s": 0.6024346580088604
+          },
+          {
+            "n": 256,
+            "c": 1.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.2999999999999943,
+            "crossed": true,
+            "min_j": -0.004818084394717075,
+            "v_peak": 1.244184087281979,
+            "v_peak_over_c": 1.244184087281979,
+            "steps": 260,
+            "wall_s": 0.6806335260043852
+          },
+          {
+            "n": 256,
+            "c": 2.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.2399999999999956,
+            "crossed": true,
+            "min_j": -0.0035023574983316487,
+            "v_peak": 1.5627255900327888,
+            "v_peak_over_c": 0.7813627950163944,
+            "steps": 248,
+            "wall_s": 0.6403622380021261
+          },
+          {
+            "n": 256,
+            "c": 5.0,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": true,
+            "t_cross": 1.2099999999999962,
+            "crossed": true,
+            "min_j": -0.0013754905104573134,
+            "v_peak": 1.5699978242250399,
+            "v_peak_over_c": 0.31399956484500796,
+            "steps": 242,
+            "wall_s": 0.6066549539973494
+          }
+        ],
+        "classical_reference": {
+          "64": {
+            "n": 64,
+            "c": null,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": false,
+            "t_cross": 1.219999999999996,
+            "crossed": true,
+            "min_j": -0.005387655098861096,
+            "v_peak": 1.5637358056250656,
+            "v_peak_over_c": null,
+            "steps": 244,
+            "wall_s": 0.06564465000701603
+          },
+          "128": {
+            "n": 128,
+            "c": null,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": false,
+            "t_cross": 1.214999999999996,
+            "crossed": true,
+            "min_j": -0.007228503030390434,
+            "v_peak": 1.5730848009735277,
+            "v_peak_over_c": null,
+            "steps": 243,
+            "wall_s": 0.16625204899173696
+          },
+          "256": {
+            "n": 256,
+            "c": null,
+            "h": 0.12,
+            "softening": 0.4,
+            "dt_max": 0.005,
+            "t_max": 8.0,
+            "damped": false,
+            "t_cross": 1.2099999999999962,
+            "crossed": true,
+            "min_j": -0.004232145880595174,
+            "v_peak": 1.5730350486079605,
+            "v_peak_over_c": null,
+            "steps": 242,
+            "wall_s": 0.6167094440024812
+          }
+        },
+        "sensitivity": {
+          "dt_max": [
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.02,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.739999999999987,
+              "crossed": true,
+              "min_j": -0.0009095206846765019,
+              "v_peak": 0.018790069000758917,
+              "v_peak_over_c": 1.8790069000758916,
+              "steps": 237,
+              "wall_s": 0.1715057590045035
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.01,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.729999999999944,
+              "crossed": true,
+              "min_j": -0.00027605353936876694,
+              "v_peak": 0.016112941591956528,
+              "v_peak_over_c": 1.6112941591956527,
+              "steps": 473,
+              "wall_s": 0.32135024199669715
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.729999999999921,
+              "crossed": true,
+              "min_j": -0.0003093490744647704,
+              "v_peak": 0.015337399179525799,
+              "v_peak_over_c": 1.53373991795258,
+              "steps": 946,
+              "wall_s": 0.641487110988237
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.0025,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.727500000000039,
+              "crossed": true,
+              "min_j": -1.3216234149332808e-05,
+              "v_peak": 0.015134387449367662,
+              "v_peak_over_c": 1.5134387449367661,
+              "steps": 1891,
+              "wall_s": 1.313609627992264
+            }
+          ],
+          "h": [
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.06,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.889999999999918,
+              "crossed": true,
+              "min_j": -4.597152757036564e-05,
+              "v_peak": 0.014667249712210097,
+              "v_peak_over_c": 1.4667249712210095,
+              "steps": 978,
+              "wall_s": 0.6622890639991965
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.09,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.78999999999992,
+              "crossed": true,
+              "min_j": -0.00039889732839410905,
+              "v_peak": 0.015099505922897778,
+              "v_peak_over_c": 1.5099505922897778,
+              "steps": 958,
+              "wall_s": 0.6494784509995952
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.729999999999921,
+              "crossed": true,
+              "min_j": -0.0003093490744647704,
+              "v_peak": 0.015337399179525799,
+              "v_peak_over_c": 1.53373991795258,
+              "steps": 946,
+              "wall_s": 0.6518593090004288
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.18,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.664999999999923,
+              "crossed": true,
+              "min_j": -0.0005706963529476894,
+              "v_peak": 0.015592352911885751,
+              "v_peak_over_c": 1.5592352911885752,
+              "steps": 933,
+              "wall_s": 0.6321493379946332
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.24,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.624999999999924,
+              "crossed": true,
+              "min_j": -0.00033961447615243185,
+              "v_peak": 0.015726848427152204,
+              "v_peak_over_c": 1.5726848427152205,
+              "steps": 925,
+              "wall_s": 0.6241427519998979
+            }
+          ],
+          "softening": [
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.2,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 3.7899999999999414,
+              "crossed": true,
+              "min_j": -0.00017320640292950706,
+              "v_peak": 0.020724908411970375,
+              "v_peak_over_c": 2.0724908411970375,
+              "steps": 758,
+              "wall_s": 0.5220672949944856
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.3,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.374999999999929,
+              "crossed": true,
+              "min_j": -7.724104674987556e-05,
+              "v_peak": 0.017381961980686134,
+              "v_peak_over_c": 1.7381961980686134,
+              "steps": 875,
+              "wall_s": 0.6016269969986752
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 4.729999999999921,
+              "crossed": true,
+              "min_j": -0.0003093490744647704,
+              "v_peak": 0.015337399179525799,
+              "v_peak_over_c": 1.53373991795258,
+              "steps": 946,
+              "wall_s": 0.6420483609981602
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.6,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 5.299999999999909,
+              "crossed": true,
+              "min_j": -0.000412547011758649,
+              "v_peak": 0.012758805499161183,
+              "v_peak_over_c": 1.2758805499161183,
+              "steps": 1060,
+              "wall_s": 0.7163114309951197
+            },
+            {
+              "n": 128,
+              "c": 0.01,
+              "h": 0.12,
+              "softening": 0.8,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": true,
+              "t_cross": 5.889999999999897,
+              "crossed": true,
+              "min_j": -6.066976852114234e-05,
+              "v_peak": 0.01107666404287206,
+              "v_peak_over_c": 1.107666404287206,
+              "steps": 1178,
+              "wall_s": 0.7973141870024847
+            }
+          ]
+        },
+        "sensitivity_classical": {
+          "dt_max": [
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.02,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.2200000000000006,
+              "crossed": true,
+              "min_j": -0.015045059347109323,
+              "v_peak": 1.5816376442134614,
+              "v_peak_over_c": null,
+              "steps": 61,
+              "wall_s": 0.04234083900519181
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.01,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.2200000000000009,
+              "crossed": true,
+              "min_j": -0.01501170135852038,
+              "v_peak": 1.5818273027948229,
+              "v_peak_over_c": null,
+              "steps": 122,
+              "wall_s": 0.08346974800224416
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.16515971899207216
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.0025,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.2124999999999853,
+              "crossed": true,
+              "min_j": -0.0033383163588571454,
+              "v_peak": 1.5686398681351854,
+              "v_peak_over_c": null,
+              "steps": 485,
+              "wall_s": 0.3273968269932084
+            }
+          ],
+          "h": [
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.06,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.16549767299147788
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.09,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.16513036099786405
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.16607343700889032
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.18,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.16708821899374016
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.24,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.1721456270024646
+            }
+          ],
+          "softening": [
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.2,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 0.6300000000000004,
+              "crossed": true,
+              "min_j": -0.00216294775453094,
+              "v_peak": 1.7326690483301024,
+              "v_peak_over_c": null,
+              "steps": 126,
+              "wall_s": 0.08621949200460222
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.3,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 0.9350000000000007,
+              "crossed": true,
+              "min_j": -0.007745757161601294,
+              "v_peak": 1.6754697383111667,
+              "v_peak_over_c": null,
+              "steps": 187,
+              "wall_s": 0.12771216800319962
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.4,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.214999999999996,
+              "crossed": true,
+              "min_j": -0.007228503030390434,
+              "v_peak": 1.5730848009735277,
+              "v_peak_over_c": null,
+              "steps": 243,
+              "wall_s": 0.18114835799497087
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.6,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.644999999999987,
+              "crossed": true,
+              "min_j": -0.0050057049515280765,
+              "v_peak": 1.1564094585692182,
+              "v_peak_over_c": null,
+              "steps": 329,
+              "wall_s": 0.22669157100608572
+            },
+            {
+              "n": 128,
+              "c": null,
+              "h": 0.12,
+              "softening": 0.8,
+              "dt_max": 0.005,
+              "t_max": 8.0,
+              "damped": false,
+              "t_cross": 1.9999999999999793,
+              "crossed": true,
+              "min_j": -0.0035722069996167046,
+              "v_peak": 0.8617905610211554,
+              "v_peak_over_c": null,
+              "steps": 400,
+              "wall_s": 0.277526609992492
+            }
+          ]
+        },
+        "params": {
+          "quick": false,
+          "c_values": [
+            0.005,
+            0.01,
+            0.02,
+            0.05,
+            0.1,
+            0.2,
+            0.5,
+            1.0,
+            2.0,
+            5.0
+          ],
+          "n_values": [
+            64,
+            128,
+            256
+          ],
+          "t_max": 8.0,
+          "dt_max": 0.005,
+          "h": 0.12,
+          "softening": 0.4,
+          "baseline_n": 128,
+          "baseline_c": 0.01,
+          "dt_values": [
+            0.02,
+            0.01,
+            0.005,
+            0.0025
+          ],
+          "h_values": [
+            0.06,
+            0.09,
+            0.12,
+            0.18,
+            0.24
+          ],
+          "softening_values": [
+            0.2,
+            0.3,
+            0.4,
+            0.6,
+            0.8
+          ],
+          "G": 1.0,
+          "M": 1.0,
+          "L": 1.0
+        }
+      },
+      "checks": {
+        "all_runs_finite": true,
+        "classical_reference_crosses": true,
+        "speed_cap_near_c": true
+      },
+      "figures": [
+        "assets/02_shell_crossing_sweep.png"
+      ]
+    },
+    {
+      "command": "compare:fluid",
+      "timestamp_utc": "2026-09-12T12:27:17+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "89a837722d848c922cb5b35e7f74f762223a9a06",
+        "dirty": false,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.4.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {
+        "n": 64,
+        "lam": 0.5,
+        "re": 200.0,
+        "nu": 0.005,
+        "t_max": 10.0,
+        "dt_max": 0.005
+      },
+      "metrics": {
+        "n": 64,
+        "re": 200.0,
+        "nu": 0.005,
+        "lam": 0.5,
+        "exact_decay_energy_err": 4.992285085339016e-15,
+        "exact_decay_enstrophy_err": 4.989290612719432e-15,
+        "energy_identity_residual": 4.483327567805784e-07,
+        "dt_limits_initial": {
+          "advection": 0.023518021709589932,
+          "viscosity": 0.44247787610619466,
+          "damping": 0.6666666666666666
+        },
+        "dt_min_used": 0.004999999999837357,
+        "E_classical_final": 0.20468268826949643,
+        "E_moss_final": 0.031857822429750715,
+        "energy_budget_moss": {
+          "E0": 0.25,
+          "E_final": 0.031857822429750715,
+          "D_visc_final": 0.015927791803029317,
+          "E_vac_final": 0.20221483409997623,
+          "residual_final": 4.4833275625322244e-07,
+          "max_abs_residual": 4.4833275625322244e-07,
+          "vac_fraction": 0.9269864102042169,
+          "extra_loss_final": 0.0,
+          "vac_exact": false
+        },
+        "timeseries_csv": [
+          "assets/03_cfd_classical_timeseries.csv",
+          "assets/03_cfd_moss_timeseries.csv"
+        ],
+        "steps_classical": 2000,
+        "steps_moss": 2000,
+        "params": {
+          "n": 64,
+          "lam": 0.5,
+          "re": 200.0,
+          "nu": 0.005,
+          "t_max": 10.0,
+          "dt_max": 0.005
+        }
+      },
+      "checks": {
+        "taylor_green_exact_decay": true,
+        "energy_identity": true,
+        "energy_budget_closed": true,
+        "energy_monotone_classical": true,
+        "energy_monotone_moss": true
+      },
+      "figures": [
+        "assets/03_cfd_stability.png"
+      ]
+    },
+    {
+      "command": "compare:fluid3d",
+      "timestamp_utc": "2026-09-12T12:28:44+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "89a837722d848c922cb5b35e7f74f762223a9a06",
+        "dirty": false,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.4.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {
+        "n": 32,
+        "lam": 0.5,
+        "re": 800.0,
+        "nu": 0.00125,
+        "t_max": 6.0,
+        "dt_max": 0.01
+      },
+      "metrics": {
+        "n": 32,
+        "re": 800.0,
+        "nu": 0.00125,
+        "lam": 0.5,
+        "enstrophy_peak_classical": 3.209048425849662,
+        "enstrophy_peak_time_classical": 6.0,
+        "enstrophy_peak_moss": 0.4150316790352781,
+        "enstrophy_peak_time_moss": 6.0,
+        "omega_max_peak_classical": 9.919091641845686,
+        "omega_max_peak_moss": 3.349712091532526,
+        "kmax_eta_min_classical": 0.23612537552885118,
+        "kmax_eta_min_moss": 0.3937462380850027,
+        "tail_fraction_max_classical": 0.18661745943370261,
+        "tail_fraction_max_moss": 0.025173533997009306,
+        "classical_under_resolved_from_t": 2.3799999999999932,
+        "classical_under_resolved": true,
+        "moss_under_resolved": true,
+        "E_final_classical": 0.1078289030996547,
+        "E_final_moss": 0.03834164639386296,
+        "energy_budget_classical": {
+          "E0": 0.12499999999999999,
+          "E_final": 0.1078289030996547,
+          "D_visc_final": 0.01717112038622196,
+          "E_vac_final": 0.0,
+          "residual_final": 2.3485876677470374e-08,
+          "max_abs_residual": 2.5619689474065677e-08,
+          "vac_fraction": 0.0,
+          "extra_loss_final": 0.0,
+          "vac_exact": false
+        },
+        "energy_budget_moss": {
+          "E0": 0.12499999999999999,
+          "E_final": 0.03834164639386296,
+          "D_visc_final": 0.005114953015180616,
+          "E_vac_final": 0.08154394689397103,
+          "residual_final": 5.463030146174441e-07,
+          "max_abs_residual": 5.463030146174441e-07,
+          "vac_fraction": 0.9409819538528159,
+          "extra_loss_final": 0.0,
+          "vac_exact": false
+        },
+        "steps_classical": 601,
+        "steps_moss": 601,
+        "wall_classical_s": 23.554234998999164,
+        "wall_moss_s": 62.31302485500055,
+        "timeseries_csv": [
+          "assets/05_tg3d_classical_timeseries.csv",
+          "assets/05_tg3d_moss_timeseries.csv"
+        ],
+        "params": {
+          "n": 32,
+          "lam": 0.5,
+          "re": 800.0,
+          "nu": 0.00125,
+          "t_max": 6.0,
+          "dt_max": 0.01
+        }
+      },
+      "checks": {
+        "energy_budget_classical": true,
+        "energy_budget_moss": true,
+        "divergence_free": true,
+        "all_finite": true
+      },
+      "figures": [
+        "assets/05_tg3d.png"
+      ]
+    },
+    {
+      "command": "validate",
+      "timestamp_utc": "2026-09-12T12:28:48+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "89a837722d848c922cb5b35e7f74f762223a9a06",
+        "dirty": false,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.4.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {},
+      "metrics": {
+        "failed": false,
+        "results": [
+          {
+            "group": "formulas",
+            "name": "lambda = G/c^3 has dimension s kg^-1",
+            "status": "PASS",
+            "detail": "[lambda] = kg^-1 s",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "lambda * F_P is dimensionless and equals 1",
+            "status": "PASS",
+            "detail": "lambda * F_P = 1 [1]",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "Xi = c^4/(8 pi G) has the dimension of a force (kg m s^-2)",
+            "status": "PASS",
+            "detail": "[Xi] = kg m s^-2; Xi = 4.81545e+42",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "Xi is NOT a pressure / energy density (Pa)",
+            "status": "PASS",
+            "detail": "[Xi] = kg m s^-2, [Pa] = kg m^-1 s^-2",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "1/(8 pi Xi c) equals G/c^5 (value and dimension)",
+            "status": "PASS",
+            "detail": "1/(8 pi Xi c) = 2.75615e-53 [kg^-1 m^-2 s^3]; G/c^5 = 2.75615e-53 [kg^-1 m^-2 s^3]",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "identity lambda = 1/(8 pi Xi c) is rejected (differs by c^2)",
+            "status": "PASS",
+            "detail": "[lambda] = kg^-1 s, [1/(8 pi Xi c)] = kg^-1 m^-2 s^3",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "Planck length / time / mass have dimensions m / s / kg",
+            "status": "PASS",
+            "detail": "l_P = 1.61626e-35 [m], t_P = 5.39125e-44 [s], m_P = 2.17643e-08 [kg]",
+            "seconds": 0.0
+          },
+          {
+            "group": "formulas",
+            "name": "ODE coupling: [G rho / c^3] == [s m^-2] required by dv/dt = -lambda_eff |v|^2 v",
+            "status": "XFAIL",
+            "detail": "[G rho/c^3] = m^-3 s, required m^-2 s: one power of length is missing in the SI form (open issue)",
+            "seconds": 0.0
+          },
+          {
+            "group": "damping",
+            "name": "exact solution matches closed form",
+            "status": "PASS",
+            "detail": "max rel err 0.0e+00",
+            "seconds": 0.00032502600515726954
+          },
+          {
+            "group": "damping",
+            "name": "exact flow composes: phi_a o phi_b = phi_(a+b)",
+            "status": "PASS",
+            "detail": "phi_a o phi_b vs phi_(a+b): max rel err 3.6e-16",
+            "seconds": 0.0001283719902858138
+          },
+          {
+            "group": "damping",
+            "name": "particle integrator: v(T) = v0/sqrt(1+2 lam v0^2 T) for any dt",
+            "status": "PASS",
+            "detail": "v(T) vs 1/sqrt(1+2 lam v0^2 T): max rel err 7.0e-16 (0.1.0 value would be 0.2928 vs 0.3974)",
+            "seconds": 0.007431079997331835
+          },
+          {
+            "group": "damping",
+            "name": "explicit Euler is first order",
+            "status": "PASS",
+            "detail": "error slope 1.003 (expect 1)",
+            "seconds": 0.006161582001368515
+          },
+          {
+            "group": "convergence",
+            "name": "KDK gravity integrator is second order (two-body)",
+            "status": "PASS",
+            "detail": "error ratios per dt halving [3.99, 4.0] (expect 4)",
+            "seconds": 0.34325220799655654
+          },
+          {
+            "group": "convergence",
+            "name": "spectral RK4 is fourth order (damped Taylor-Green)",
+            "status": "PASS",
+            "detail": "E(T) error ratios per dt halving [19.9, 18.2] (expect 16)",
+            "seconds": 0.7659993580018636
+          },
+          {
+            "group": "particles",
+            "name": "cubic spline kernels are normalized (1D, 3D)",
+            "status": "PASS",
+            "detail": "int W dV: 1D 1.000000, 3D 1.000000",
+            "seconds": 0.0024070499930530787
+          },
+          {
+            "group": "particles",
+            "name": "dense and cKDTree density estimates agree",
+            "status": "PASS",
+            "detail": "dense vs cKDTree density: max abs diff 8.5e-14",
+            "seconds": 0.009340004995465279
+          },
+          {
+            "group": "particles",
+            "name": "dense and loop gravity agree",
+            "status": "PASS",
+            "detail": "dense vs loop gravity: max abs diff 0.0e+00",
+            "seconds": 0.0013225699949543923
+          },
+          {
+            "group": "particles",
+            "name": "Jacobian monitor: linear maps, crossing detection",
+            "status": "PASS",
+            "detail": "1D scaling J = 0.400, swap detected True, 3D det 8.000000 (expect 8)",
+            "seconds": 0.013125590005074628
+          },
+          {
+            "group": "particles",
+            "name": "undamped 1D cold collapse shell-crosses (J <= 0)",
+            "status": "PASS",
+            "detail": "min J -1.005, crossing at t = 1.219999999999996, v_ff 1.671",
+            "seconds": 0.11364934299490415
+          },
+          {
+            "group": "particles",
+            "name": "damped collapse (c = 0.01): speed capped near c",
+            "status": "PASS",
+            "detail": "c = 0.01: peak |v| / c = 1.47 (cubic damping caps speed near c)",
+            "seconds": 0.15061437300755642
+          },
+          {
+            "group": "particles",
+            "name": "physical regime (v_ff < c): damping does not prevent crossing",
+            "status": "PASS",
+            "detail": "c = 2 (v_ff/c = 0.77 < 1): crossing at t = 1.2499999999999953, min J -0.829",
+            "seconds": 0.10593577699910384
+          },
+          {
+            "group": "fluid",
+            "name": "Taylor-Green viscous eigenmode decays exactly",
+            "status": "PASS",
+            "detail": "max rel err vs exp(-4 nu t): 2.2e-15",
+            "seconds": 0.436747789994115
+          },
+          {
+            "group": "fluid",
+            "name": "flow stays divergence-free with damping",
+            "status": "PASS",
+            "detail": "max |div u| = 4.5e-15",
+            "seconds": 0.0791647759906482
+          },
+          {
+            "group": "fluid",
+            "name": "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4",
+            "status": "PASS",
+            "detail": "E(T) - [E0 - int(2 nu Omega + lam ||u||_4^4)] = +4.1e-07 (every-step trapezoid)",
+            "seconds": 0.7308844159997534
+          },
+          {
+            "group": "fluid",
+            "name": "cubic damping term dealiased (2/3 rule alone is not enough)",
+            "status": "PASS",
+            "detail": "aliased |k|=3 amplitude: 2/3 rule 0.1250, padded 6.1e-16",
+            "seconds": 0.002056072000414133
+          },
+          {
+            "group": "fluid",
+            "name": "cfl_dt includes the cubic damping stiffness limit",
+            "status": "PASS",
+            "detail": "dt_damp = 1.67e-03 (2 cfl / 3 lam |u|^2 = 1.67e-03), cfl_dt = 1.67e-03",
+            "seconds": 0.0003703430120367557
+          },
+          {
+            "group": "fluid3d",
+            "name": "3D shear mode u = sin y decays exactly",
+            "status": "PASS",
+            "detail": "u = sin y exp(-nu t): max abs err 2.2e-16",
+            "seconds": 0.3853889780002646
+          },
+          {
+            "group": "fluid3d",
+            "name": "3D Taylor-Green: energy budget closes, divergence-free",
+            "status": "PASS",
+            "detail": "3D Taylor-Green: budget residual 3.4e-07, E_vac 2.235e-02, max |div u| 2.3e-15",
+            "seconds": 0.5806235490017571
+          },
+          {
+            "group": "fluid3d",
+            "name": "3D cubic damping term dealiased",
+            "status": "PASS",
+            "detail": "aliased |k|=1 amplitude: 2/3 rule 0.1250, padded 1.5e-16",
+            "seconds": 0.004472614004043862
+          },
+          {
+            "group": "invariants",
+            "name": "particles: E_kin + E_pot + E_vac conserved to O(dt^2)",
+            "status": "PASS",
+            "detail": "E_kin + E_pot + E_vac drift 9.91e-04 -> 2.53e-04 per dt halving (ratio 3.92, expect 4); E_vac = 4.014e-02",
+            "seconds": 0.02782775100786239
+          }
+        ]
+      },
+      "checks": {
+        "lambda = G/c^3 has dimension s kg^-1": "PASS",
+        "lambda * F_P is dimensionless and equals 1": "PASS",
+        "Xi = c^4/(8 pi G) has the dimension of a force (kg m s^-2)": "PASS",
+        "Xi is NOT a pressure / energy density (Pa)": "PASS",
+        "1/(8 pi Xi c) equals G/c^5 (value and dimension)": "PASS",
+        "identity lambda = 1/(8 pi Xi c) is rejected (differs by c^2)": "PASS",
+        "Planck length / time / mass have dimensions m / s / kg": "PASS",
+        "ODE coupling: [G rho / c^3] == [s m^-2] required by dv/dt = -lambda_eff |v|^2 v": "XFAIL",
+        "exact solution matches closed form": "PASS",
+        "exact flow composes: phi_a o phi_b = phi_(a+b)": "PASS",
+        "particle integrator: v(T) = v0/sqrt(1+2 lam v0^2 T) for any dt": "PASS",
+        "explicit Euler is first order": "PASS",
+        "KDK gravity integrator is second order (two-body)": "PASS",
+        "spectral RK4 is fourth order (damped Taylor-Green)": "PASS",
+        "cubic spline kernels are normalized (1D, 3D)": "PASS",
+        "dense and cKDTree density estimates agree": "PASS",
+        "dense and loop gravity agree": "PASS",
+        "Jacobian monitor: linear maps, crossing detection": "PASS",
+        "undamped 1D cold collapse shell-crosses (J <= 0)": "PASS",
+        "damped collapse (c = 0.01): speed capped near c": "PASS",
+        "physical regime (v_ff < c): damping does not prevent crossing": "PASS",
+        "Taylor-Green viscous eigenmode decays exactly": "PASS",
+        "flow stays divergence-free with damping": "PASS",
+        "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4": "PASS",
+        "cubic damping term dealiased (2/3 rule alone is not enough)": "PASS",
+        "cfl_dt includes the cubic damping stiffness limit": "PASS",
+        "3D shear mode u = sin y decays exactly": "PASS",
+        "3D Taylor-Green: energy budget closes, divergence-free": "PASS",
+        "3D cubic damping term dealiased": "PASS",
+        "particles: E_kin + E_pot + E_vac conserved to O(dt^2)": "PASS"
+      },
+      "figures": []
     }
   ],
-  "generated_utc": "2026-09-12T12:24:43+00:00"
+  "generated_utc": "2026-09-12T12:28:48+00:00"
 }
