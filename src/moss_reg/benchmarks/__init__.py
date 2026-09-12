@@ -11,6 +11,7 @@ from .fluid import run_cfd_benchmark
 from .particles import free_fall_reference, run_shell_crossing_benchmark
 from .sweep import run_shell_crossing_sweep
 from .tg3d import run_tg3d_benchmark
+from .tg3d_sweep import run_tg3d_sweep
 
 __all__ = [
     "run_decay_benchmark",
@@ -18,5 +19,6 @@ __all__ = [
     "run_shell_crossing_sweep",
     "run_cfd_benchmark",
     "run_tg3d_benchmark",
+    "run_tg3d_sweep",
     "free_fall_reference",
 ]

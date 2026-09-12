@@ -4,6 +4,7 @@ Usage:
     moss-reg validate  [--json PATH] [--strict]
     moss-reg compare   --type {particles,fluid,fluid3d} [options]
     moss-reg sweep     [options]
+    moss-reg sweep3d   [options]      (3D resolution x damping-number sweep, long)
     moss-reg run-all   [--output DIR] [--quick]
     moss-reg supplement [--report PATH] [--output PATH] [--copy-figures]
     moss-reg benchmark --type {decay,particles,fluid} [options]   (legacy)
@@ -38,6 +39,7 @@ from .benchmarks import (
     run_shell_crossing_benchmark,
     run_shell_crossing_sweep,
     run_tg3d_benchmark,
+    run_tg3d_sweep,
 )
 from .report import git_info, make_entry, sanitize, write_report
 from .supplement import write_supplement
@@ -134,6 +136,18 @@ def _build_parser() -> argparse.ArgumentParser:
                      help="copy the report's figures into <output dir>/<figures-dir>")
     sup.add_argument("--title", default="Supplementary Numerical Material")
     sup.add_argument("--subtitle", default="")
+
+    s3 = sub.add_parser("sweep3d", help="3D Taylor-Green sweep over resolution and damping number (long)")
+    _add_output(s3)
+    s3.add_argument("--quick", action="store_true", help="tiny grid (smoke test)")
+    s3.add_argument("--re", type=float, default=None, help="Reynolds number")
+    s3.add_argument("--t-max", type=float, default=None, help="integration horizon")
+    s3.add_argument("--dt", type=float, default=None, help="maximum timestep")
+    s3.add_argument("--classical-n", type=int, nargs="+", default=None, help="resolutions of the classical run")
+    s3.add_argument("--damped-n", type=int, nargs="+", default=None, help="resolutions of the damped runs")
+    s3.add_argument("--lambdas", type=float, nargs="+", default=None, help="damping numbers at every damped N")
+    s3.add_argument("--lambdas-small-n", type=float, nargs="+", default=None,
+                    help="extra damping numbers run only at the smallest damped N")
 
     run_all = sub.add_parser("run-all", help="run every benchmark, sweep and validate")
     _add_output(run_all)
@@ -268,6 +282,19 @@ def cmd_sweep(args: argparse.Namespace, argv: Optional[List[str]] = None) -> int
     return 0
 
 
+def cmd_sweep3d(args: argparse.Namespace, argv: Optional[List[str]] = None) -> int:
+    outdir = Path(args.output)
+    git = git_info()
+    kw = _kwargs(args, {"re": "re", "t_max": "t_max", "dt": "dt_max", "classical_n": "classical_n_values",
+                        "damped_n": "damped_n_values", "lambdas": "lam_values",
+                        "lambdas_small_n": "lam_values_small_n"})
+    metrics = run_tg3d_sweep(outdir, quick=args.quick, **kw)
+    _print_metrics("sweep:fluid3d  3D Taylor-Green sweep", metrics)
+    path = _record(outdir, "sweep:fluid3d", metrics.get("params", kw), metrics, argv, git)
+    print(f"report merged into {path}")
+    return 0 if all(bool(v) for v in metrics.get("checks", {}).values()) else 1
+
+
 def cmd_run_all(args: argparse.Namespace, argv: Optional[List[str]] = None) -> int:
     outdir = Path(args.output)
     git = git_info()          # source-tree state before any output is written
@@ -347,6 +374,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return cmd_compare(args, argv_list)
         if args.command == "sweep":
             return cmd_sweep(args, argv_list)
+        if args.command == "sweep3d":
+            return cmd_sweep3d(args, argv_list)
         if args.command == "run-all":
             return cmd_run_all(args, argv_list)
         if args.command == "supplement":

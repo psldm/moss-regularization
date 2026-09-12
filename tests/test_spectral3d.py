@@ -1,6 +1,8 @@
 """3D spectral solver: exact shear-mode decay, divergence, energy identity,
 cubic dealiasing, RK4 order, Taylor-Green run and the benchmark entry."""
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -85,3 +87,14 @@ def test_tg3d_benchmark_smoke(tmp_path):
     assert m["E_final_moss"] < m["E_final_classical"]
     for csv in m["timeseries_csv"]:
         assert (tmp_path / csv.split("/")[-1]).is_file()
+
+
+def test_tg3d_sweep_smoke(tmp_path):
+    from moss_reg.benchmarks.tg3d_sweep import run_tg3d_sweep
+
+    m = run_tg3d_sweep(tmp_path, quick=True, re=100.0, dt_max=0.02)
+    assert (tmp_path / "06_tg3d_sweep.png").is_file()
+    assert all(m["checks"].values()), m["checks"]
+    assert len(m["classical"]) == 2 and len(m["damped"]) == 3
+    assert m["threshold_lambda_4lam_over_re_eq_1"] == pytest.approx(25.0)
+    assert all((tmp_path / Path(c).name).is_file() for c in m["timeseries_csv"])

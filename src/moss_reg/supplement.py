@@ -296,8 +296,11 @@ def generate_supplement(
     if "compare:fluid3d" in by_cmd:
         parts.append(_simple_run(by_cmd["compare:fluid3d"], "3D Taylor--Green vortex: classical vs. moss (compare)", figures_dir,
                                  "Three-dimensional Taylor--Green vortex as written by \\texttt{moss-reg compare --type fluid3d}."))
+    if "sweep:fluid3d" in by_cmd:
+        parts.append(_simple_run(by_cmd["sweep:fluid3d"], "3D Taylor--Green sweep: resolution and damping number", figures_dir,
+                                 "3D Taylor--Green sweep as written by \\texttt{moss-reg sweep3d}."))
     for cmd, run in by_cmd.items():
-        if cmd not in ("validate", "decay", "compare:particles", "sweep:particles", "compare:fluid", "compare:fluid3d"):
+        if cmd not in ("validate", "decay", "compare:particles", "sweep:particles", "compare:fluid", "compare:fluid3d", "sweep:fluid3d"):
             parts.append(_simple_run(run, cmd, figures_dir, f"Figure of {tt(cmd)}."))
     parts.append("\\end{document}\n")
     return "\n".join(parts)
