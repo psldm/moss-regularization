@@ -331,7 +331,7 @@ class SpectralNS2D:
         field), l4, l4_pow4, linf, div_max, and the instantaneous damping
         power ``vac_power = lam <|u|^4>`` feeding the vacuum reservoir.
         """
-        from ..diagnostics.norms import field_norms
+        from ..diagnostics.norms import field_norms, spectral_tail_fraction
 
         u, v = self.velocity()
         # components in array-axis order: axis 0 is y, axis 1 is x
@@ -341,6 +341,8 @@ class SpectralNS2D:
         else:
             up, vp = self.velocity_padded()
             d["vac_power"] = float(np.mean(self._lam_pad * (up * up + vp * vp) ** 2))
+        kmax = float(np.sqrt(np.max(self.k2 * self.mask)))
+        d["tail_fraction"] = spectral_tail_fraction([self.u_hat, self.v_hat], self.k2, kmax)
         d["steps"] = self.steps
         return d
 

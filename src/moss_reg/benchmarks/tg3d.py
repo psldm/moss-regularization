@@ -28,6 +28,8 @@ from ._style import CLASSICAL, MOSS, MUTED, apply_style
 
 __all__ = ["run_tg3d_benchmark"]
 
+TAIL_LIMIT = 1e-3       # energy fraction at |k| > 0.8 kmax above which a run is called under-resolved
+
 
 def _run(n: int, nu: float, lam: float, t_max: float, dt_max: float) -> DiagnosticsLog:
     s = SpectralNS3D(n, nu=nu, lam=lam, dt_max=dt_max)
@@ -76,14 +78,16 @@ def run_tg3d_benchmark(
         ax.set_ylabel(ylab)
         ax.set_title(title)
         ax.legend()
-    # resolution indicator on the enstrophy panel
+    # resolution indicator on the enstrophy panel: energy piling up at the
+    # grid scale (tail fraction of the spectrum above 1e-3)
     ax = axes[0, 1]
-    ke0 = log0.series("kmax_eta")
-    under = np.where(ke0 < 1.0)[0]
-    if under.size:
-        t_under = float(log0.t[under[0]])
+    tail0 = log0.series("tail_fraction")
+    under = np.where(tail0 > TAIL_LIMIT)[0]
+    t_under = float(log0.t[under[0]]) if under.size else None
+    if t_under is not None:
         ax.axvline(t_under, color=MUTED, lw=0.8, ls=":")
-        ax.text(t_under, ax.get_ylim()[1] * 0.95, rf"classical: $k_{{\max}}\eta < 1$ from $t = {t_under:.2f}$",
+        ax.text(t_under, ax.get_ylim()[1] * 0.95,
+                rf"classical: spectral tail $> 10^{{-3}}$ from $t = {t_under:.2f}$",
                 fontsize=8, color=MUTED, ha="left", va="top")
     fig.suptitle(
         rf"3D Taylor-Green vortex, $N = {n}^3$, $Re = {re:g}$: classical vs. cubic damping  "
@@ -113,7 +117,11 @@ def run_tg3d_benchmark(
         "omega_max_peak_moss": float(np.max(log1.series("omega_max"))),
         "kmax_eta_min_classical": float(np.min(log0.series("kmax_eta"))),
         "kmax_eta_min_moss": float(np.min(log1.series("kmax_eta"))),
-        "classical_under_resolved": bool(np.min(log0.series("kmax_eta")) < 1.0),
+        "tail_fraction_max_classical": float(np.max(tail0)),
+        "tail_fraction_max_moss": float(np.max(log1.series("tail_fraction"))),
+        "classical_under_resolved_from_t": t_under if t_under is not None else np.nan,
+        "classical_under_resolved": t_under is not None,
+        "moss_under_resolved": bool(np.max(log1.series("tail_fraction")) > TAIL_LIMIT),
         "E_final_classical": float(log0.series("E")[-1]),
         "E_final_moss": float(log1.series("E")[-1]),
         "energy_budget_classical": b0,

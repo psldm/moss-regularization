@@ -14,7 +14,7 @@ from typing import Dict, Sequence, Union
 
 import numpy as np
 
-__all__ = ["field_norms", "pad_spectrum", "wavenumbers"]
+__all__ = ["field_norms", "pad_spectrum", "wavenumbers", "spectral_tail_fraction"]
 
 Box = Union[float, Sequence[float]]
 
@@ -99,3 +99,17 @@ def field_norms(components: Sequence[np.ndarray], box: Box = 2.0 * np.pi,
         "linf": linf,
         "div_max": div_max,
     }
+
+
+def spectral_tail_fraction(hats: Sequence[np.ndarray], k2: np.ndarray, kmax: float,
+                           frac: float = 0.8) -> float:
+    """Fraction of the kinetic energy in the outer part of the retained band,
+    |k| > frac * kmax.  A resolved spectral run keeps this tiny (the spectrum
+    must fall by orders of magnitude before the cutoff); values above ~1e-3
+    indicate energy piling up at the grid scale (under-resolution)."""
+    total = sum(np.sum(np.abs(h) ** 2) for h in hats)
+    if total <= 0.0:
+        return 0.0
+    outer = (k2 > (frac * kmax) ** 2) & (k2 <= kmax**2 + 1e-9)
+    tail = sum(np.sum(np.abs(h[outer]) ** 2) for h in hats)
+    return float(tail / total)

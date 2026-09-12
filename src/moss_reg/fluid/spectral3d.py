@@ -26,7 +26,7 @@ from typing import Dict, List, Optional, Sequence
 import numpy as np
 from scipy import fft as sfft
 
-from ..diagnostics.norms import field_norms
+from ..diagnostics.norms import field_norms, spectral_tail_fraction
 
 __all__ = ["SpectralNS3D"]
 
@@ -245,8 +245,9 @@ class SpectralNS3D:
 
     def diagnostics(self) -> dict:
         """E, enstrophy, grad_l2_sq, l4, linf, div_max, omega_max, vac_power,
-        epsilon (viscous dissipation rate), eta (Kolmogorov scale) and
-        kmax_eta (resolution indicator; >= 1 is resolved)."""
+        epsilon (viscous dissipation rate), eta (Kolmogorov scale), kmax_eta
+        (turbulence resolution criterion, >= 1 resolved) and tail_fraction
+        (energy fraction at |k| > 0.8 kmax; > 1e-3 means grid-scale pile-up)."""
         u = self.velocity()
         d = field_norms(u, box=2.0 * np.pi, pad=self.PAD_FACTOR)
         w = self.vorticity()
@@ -261,6 +262,7 @@ class SpectralNS3D:
         eta = (self.nu**3 / eps) ** 0.25 if eps > 0 else np.inf
         d["eta"] = float(eta)
         d["kmax_eta"] = float(self.kmax * eta)
+        d["tail_fraction"] = spectral_tail_fraction(self.u_hat, self.k2, self.kmax)
         d["steps"] = self.steps
         return d
 

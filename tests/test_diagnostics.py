@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from moss_reg.diagnostics import DiagnosticsLog, EnergyBudget, field_norms, pad_spectrum
+from moss_reg.diagnostics.norms import spectral_tail_fraction, wavenumbers
 from moss_reg.fluid.spectral import SpectralNS2D
 from moss_reg.particles.integrator import LagrangianSystem
 
@@ -104,3 +105,17 @@ def test_particle_diagnostics_without_gravity():
     d = sys.diagnostics(jacobian=False)
     assert d["E_pot"] == 0.0
     assert d["E_kin"] + d["E_vac"] == pytest.approx(1.0, rel=1e-12)   # 1/2 m v0^2 = 1
+
+
+def test_spectral_tail_fraction():
+    n = 32
+    x = 2 * np.pi * np.arange(n) / n
+    K = wavenumbers((n, n))
+    k2 = K[0] ** 2 + K[1] ** 2
+    kmax = n / 3.0
+    smooth = np.fft.fft2(np.cos(x)[:, None] * np.cos(2 * x)[None, :])
+    assert spectral_tail_fraction([smooth], k2, kmax) == 0.0
+    rough = np.fft.fft2(np.cos(x)[:, None] * np.cos(2 * x)[None, :] + 0.1 * np.cos(10 * x)[:, None] * np.ones(n)[None, :])
+    frac = spectral_tail_fraction([rough], k2, kmax)
+    assert 0.0 < frac < 1.0
+    assert frac == pytest.approx(0.01 / 2 / (0.25 + 0.01 / 2), rel=1e-12)   # energy ratio of the k=10 mode
