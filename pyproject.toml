@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moss-regularization"
-version = "0.1.0"
+version = "0.2.0"
 description = "Physically-grounded nonlinear vacuum damping regularization library for CFD and N-body simulations"
 readme = "README.md"
 license = { text = "MIT" }

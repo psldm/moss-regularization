@@ -123,6 +123,14 @@ def cubic_spline_grad_vector(
 # Density estimation
 # ---------------------------------------------------------------------------
 
+# Pairwise (N, N) distance matrices are used below this many elements.
+_DENSE_MAX_ELEMENTS = 3_000_000
+
+
+def _norm_array(h: np.ndarray, dim: int) -> np.ndarray:
+    return 4.0 / (3.0 * h) if dim == 1 else 8.0 / (np.pi * h**3)
+
+
 def compute_density(
     positions: np.ndarray,
     masses: np.ndarray,
@@ -132,10 +140,12 @@ def compute_density(
 ) -> np.ndarray:
     """SPH density estimate rho_i = sum_j m_j W(|x_i - x_j|, h_i).
 
-    Neighbor search uses ``scipy.spatial.cKDTree``.  The self-term
-    (j = i) is included so that the estimate integrates to the total
-    mass away from boundaries.  Passing ``boxsize`` enables periodic
-    boundary conditions, in which case sum_i rho_i dV == sum_i m_i.
+    Small systems use a dense (N, N) pairwise distance matrix; larger
+    ones fall back to ``scipy.spatial.cKDTree`` neighbour queries.  Both
+    paths give identical results (see tests).  The self-term (j = i) is
+    included so that the estimate integrates to the total mass away
+    from boundaries.  Passing ``boxsize`` enables periodic boundary
+    conditions, in which case sum_i rho_i dV == sum_i m_i.
     """
     positions = np.asarray(positions, dtype=np.float64)
     masses = np.asarray(masses, dtype=np.float64)
@@ -151,6 +161,14 @@ def compute_density(
     h_arr = np.broadcast_to(np.asarray(h, dtype=np.float64), (n,)).copy()
     if np.any(h_arr <= 0.0):
         raise ValueError("smoothing lengths must be positive")
+
+    if n * n * d <= _DENSE_MAX_ELEMENTS:
+        dr = positions[:, np.newaxis, :] - positions[np.newaxis, :, :]
+        if boxsize is not None:
+            dr -= boxsize * np.rint(dr / boxsize)
+        r = np.sqrt(np.sum(dr * dr, axis=-1))                     # (N, N)
+        w = _norm_array(h_arr, dim)[:, np.newaxis] * _spline_core(r / h_arr[:, np.newaxis])
+        return np.sum(masses[np.newaxis, :] * w, axis=1)
 
     tree = cKDTree(positions, boxsize=boxsize)
     rho = np.zeros(n)
