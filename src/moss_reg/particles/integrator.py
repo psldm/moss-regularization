@@ -122,6 +122,7 @@ class LagrangianSystem:
         self.gravity = bool(gravity)
         self.time = 0.0
         self.n_steps = 0
+        self.energy_to_vacuum = 0.0        # cumulative kinetic energy removed by damping
         self.densities = compute_density(self.positions, self.masses, self.h)
         self.acceleration = self.gravity_acceleration()
 
@@ -147,6 +148,56 @@ class LagrangianSystem:
             return np.zeros_like(self.densities)
         return self.G * self.densities / self.c**3
 
+    # -- invariants -------------------------------------------------------
+
+    def _kinetic(self, v: np.ndarray) -> float:
+        return 0.5 * float(np.sum(self.masses * np.sum(v * v, axis=1)))
+
+    def kinetic_energy(self) -> float:
+        return self._kinetic(self.velocities)
+
+    def potential_energy(self) -> float:
+        """Plummer-softened pair potential, consistent with the force
+        (zero when gravity is disabled)."""
+        if not self.gravity or self.positions.shape[0] < 2:
+            return 0.0
+        x = self.positions
+        dr = x[np.newaxis, :, :] - x[:, np.newaxis, :]
+        r = np.sqrt(np.sum(dr * dr, axis=-1) + self.softening**2)
+        mm = self.masses[:, np.newaxis] * self.masses[np.newaxis, :]
+        iu = np.triu_indices(x.shape[0], k=1)
+        return -self.G * float(np.sum(mm[iu] / r[iu]))
+
+    def jacobian_min(self) -> float:
+        """min_i J_i of the Lagrangian map (1D interval Jacobians; 3D SPH
+        determinants using the smoothing lengths)."""
+        from .jacobian import JacobianTracker
+
+        q = self.initial_positions
+        tracker = JacobianTracker(q[:, 0] if q.shape[1] == 1 else q, h=self.h)
+        return tracker.min_jacobian(self.positions[:, 0] if q.shape[1] == 1 else self.positions)
+
+    def diagnostics(self, potential: bool = True, jacobian: bool = True) -> dict:
+        """Scalar diagnostics: E_kin, E_pot, E_vac (cumulative), E_total,
+        v_max, rho_max, lam_max and J_min.  ``potential`` costs O(N^2)."""
+        e_kin = self.kinetic_energy()
+        e_pot = self.potential_energy() if potential else np.nan
+        speed = np.sqrt(np.sum(self.velocities**2, axis=1))
+        lam = self.damping_coefficients()
+        out = {
+            "E_kin": e_kin,
+            "E_pot": e_pot,
+            "E_vac": self.energy_to_vacuum,
+            "E_total": e_kin + e_pot + self.energy_to_vacuum,
+            "v_max": float(np.max(speed)) if speed.size else 0.0,
+            "rho_max": float(np.max(self.densities)) if self.densities.size else 0.0,
+            "lam_max": float(np.max(lam)) if lam.size else 0.0,
+            "steps": self.n_steps,
+        }
+        if jacobian:
+            out["J_min"] = self.jacobian_min()
+        return out
+
     # -- integration ------------------------------------------------------
 
     def step(self, dt: float) -> None:
@@ -160,14 +211,17 @@ class LagrangianSystem:
         lam0 = self.damping_coefficients()
 
         v = self.velocities + half * a0                          # half-kick
-        v = exact_damping(v, half, lam0)                         # damp dt/2, rho^n
+        v_damped = exact_damping(v, half, lam0)                  # damp dt/2, rho^n
+        self.energy_to_vacuum += self._kinetic(v) - self._kinetic(v_damped)
+        v = v_damped
         self.positions = self.positions + v * dt                 # drift
         self.update_densities()                                  # rho^(n+1)
 
         a1 = self.gravity_acceleration()
         lam1 = self.damping_coefficients()
-        v = exact_damping(v, half, lam1)                         # damp dt/2, rho^(n+1)
-        self.velocities = v + half * a1                          # half-kick
+        v_damped = exact_damping(v, half, lam1)                  # damp dt/2, rho^(n+1)
+        self.energy_to_vacuum += self._kinetic(v) - self._kinetic(v_damped)
+        self.velocities = v_damped + half * a1                   # half-kick
         self.time += dt
         self.n_steps += 1
 

@@ -31,6 +31,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from ..diagnostics import DiagnosticsLog
 from ..particles.integrator import LagrangianSystem
 from ..particles.jacobian import JacobianTracker
 from ._style import CLASSICAL, INK2, MOSS, MUTED, apply_style
@@ -64,12 +65,15 @@ def _run(
     dt_max: float,
     stop_on_crossing: bool,
     snapshots: Sequence[float] = (),
+    log: Optional[DiagnosticsLog] = None,
 ) -> Dict[str, object]:
     times, jmin = [0.0], [1.0]
     crossing: Optional[float] = None
     vpeak = 0.0
     snaps: List[Tuple[float, np.ndarray, np.ndarray]] = []
     pending = sorted(t for t in snapshots if 0.0 < t <= t_end)
+    if log is not None:
+        log.record(sys.time, **sys.diagnostics(jacobian=False), J_min=1.0)
     while sys.time < t_end - 1e-14:
         dt = min(sys.adaptive_dt(dt_max=dt_max, damp_safety=np.inf), t_end - sys.time)
         if pending:
@@ -79,6 +83,8 @@ def _run(
         j = tracker.min_jacobian(sys.positions)
         jmin.append(j)
         vpeak = max(vpeak, float(np.max(np.abs(sys.velocities))))
+        if log is not None:
+            log.record(sys.time, **sys.diagnostics(jacobian=False), J_min=j)
         if pending and abs(sys.time - pending[0]) < 1e-12:
             snaps.append((sys.time, sys.positions[:, 0].copy(), sys.velocities[:, 0].copy()))
             pending.pop(0)
@@ -129,13 +135,20 @@ def run_shell_crossing_benchmark(
     apply_style()
 
     sys0, tr0 = _build(n, None, softening, h)
-    r0 = _run(sys0, tr0, t_max, dt_max, stop_on_crossing=True)
+    log0 = DiagnosticsLog()
+    r0 = _run(sys0, tr0, t_max, dt_max, stop_on_crossing=True, log=log0)
     t_x0 = r0["crossing"]
     v_ff = r0["vpeak"]
 
     snap_times = [t_x0] if t_x0 is not None else []
     sys1, tr1 = _build(n, c, softening, h)
-    r1 = _run(sys1, tr1, t_max, dt_max, stop_on_crossing=False, snapshots=snap_times)
+    log1 = DiagnosticsLog()
+    r1 = _run(sys1, tr1, t_max, dt_max, stop_on_crossing=False, snapshots=snap_times, log=log1)
+    csv0 = log0.write_csv(outdir / "02_shell_crossing_classical_timeseries.csv")
+    csv1 = log1.write_csv(outdir / "02_shell_crossing_moss_timeseries.csv")
+    e_tot1 = log1.series("E_total")
+    energy_drift = float(np.max(np.abs(e_tot1 - e_tot1[0])))
+    e_ref = max(abs(float(e_tot1[0])), float(np.max(log1.series("E_vac"))), 1e-300)
     t_x1 = r1["crossing"]
     regime = "physical (v_ff < c)" if v_ff < c else "superluminal in code units (v_ff > c)"
 
@@ -194,6 +207,7 @@ def run_shell_crossing_benchmark(
         "undamped_crossing_detected": t_x0 is not None,
         "jacobian_histories_finite": finite,
         "damped_speed_bounded": r1["vpeak"] <= max(v_ff, 2.0 * c) * 1.05,
+        "energy_invariant_moss": energy_drift < 5e-2 * e_ref,
     }
     return {
         "n": n,
@@ -211,6 +225,9 @@ def run_shell_crossing_benchmark(
         "vfinal_moss": r1["vfinal"],
         "steps_classical": r0["steps"],
         "steps_moss": r1["steps"],
+        "E_vac_moss_final": float(log1.series("E_vac")[-1]),
+        "E_total_drift_moss": energy_drift,
+        "timeseries_csv": [str(csv0), str(csv1)],
         "params": {
             "n": n, "c": c, "compactness": compactness, "t_max": t_max,
             "dt_max": dt_max, "softening": softening, "h": h, "G": 1.0, "M": 1.0, "L": 1.0,

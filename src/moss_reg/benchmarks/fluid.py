@@ -34,17 +34,20 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from ..diagnostics import DiagnosticsLog
 from ..fluid.spectral import SpectralNS2D
 from ._style import CLASSICAL, MOSS, apply_style
 
 __all__ = ["run_cfd_benchmark"]
 
 
-def _integrate(solver: SpectralNS2D, t_end: float):
-    """Every-step histories (t, E, Omega, L4), including t = 0."""
+def _integrate(solver: SpectralNS2D, t_end: float, log: DiagnosticsLog):
+    """Every-step histories (t, E, Omega, L4), including t = 0; the full
+    diagnostics (norms, damping power, ...) go to ``log``."""
     times, e_hist, o_hist, l4_hist = [0.0], [], [], []
     e, o, l4 = solver.measure()
     e_hist.append(e); o_hist.append(o); l4_hist.append(l4)
+    log.record(solver.time, **solver.diagnostics())
     dt_min = np.inf
     while solver.time < t_end - 1e-14:
         dt = min(solver.cfl_dt(), t_end - solver.time)
@@ -55,6 +58,7 @@ def _integrate(solver: SpectralNS2D, t_end: float):
         e_hist.append(e)
         o_hist.append(o)
         l4_hist.append(l4)
+        log.record(solver.time, **solver.diagnostics())
     return (
         np.asarray(times),
         np.asarray(e_hist),
@@ -79,7 +83,8 @@ def run_cfd_benchmark(
 
     solver0 = SpectralNS2D(n, nu=nu, lam=0.0, dt_max=dt_max)
     solver0.set_taylor_green()
-    t0, e0, o0, l40, _ = _integrate(solver0, t_max)
+    log0 = DiagnosticsLog()
+    t0, e0, o0, l40, _ = _integrate(solver0, t_max, log0)
 
     # exact viscous eigenmode check for the classical run
     e_exact = 0.25 * np.exp(-4.0 * nu * t0)
@@ -90,7 +95,11 @@ def run_cfd_benchmark(
     solver1 = SpectralNS2D(n, nu=nu, lam=lam, dt_max=dt_max)
     solver1.set_taylor_green()
     lim = solver1.dt_limits()
-    t1, e1, o1, l41, dt_min = _integrate(solver1, t_max)
+    log1 = DiagnosticsLog()
+    t1, e1, o1, l41, dt_min = _integrate(solver1, t_max, log1)
+    budget = log1.budget(nu=nu).summary()
+    csv0 = log0.write_csv(outdir / "03_cfd_classical_timeseries.csv")
+    csv1 = log1.write_csv(outdir / "03_cfd_moss_timeseries.csv")
 
     # energy identity residual for the damped run (every-step trapezoid)
     e_predicted = e1[0] - np.trapezoid(2.0 * nu * o1 + lam * l41**4, t1)
@@ -123,6 +132,7 @@ def run_cfd_benchmark(
     checks = {
         "taylor_green_exact_decay": err_e < 1e-6 and err_o < 1e-6,
         "energy_identity": abs(residual) < 1e-5,
+        "energy_budget_closed": budget["max_abs_residual"] < 1e-5,
         "energy_monotone_classical": bool(np.all(np.diff(e0) <= 0.0)),
         "energy_monotone_moss": bool(np.all(np.diff(e1) <= 0.0)),
     }
@@ -138,6 +148,8 @@ def run_cfd_benchmark(
         "dt_min_used": float(dt_min),
         "E_classical_final": float(e0[-1]),
         "E_moss_final": float(e1[-1]),
+        "energy_budget_moss": budget,
+        "timeseries_csv": [str(csv0), str(csv1)],
         "steps_classical": solver0.steps,
         "steps_moss": solver1.steps,
         "params": {"n": n, "lam": lam, "re": re, "nu": nu, "t_max": t_max, "dt_max": dt_max},

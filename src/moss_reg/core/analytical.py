@@ -21,6 +21,7 @@ from ..constants import LAMBDA
 
 __all__ = [
     "exact_damping",
+    "exact_damping_alpha",
     "damped_step",
     "euler_step",
     "damping_timescale",
@@ -71,6 +72,35 @@ def exact_damping(
     zero = np.logical_or(sq == 0.0, t_arr == 0.0)
     denom = np.where(zero, 1.0, denom)
     return v0 / denom
+
+
+def exact_damping_alpha(
+    v0: ArrayLike,
+    t: ArrayLike,
+    lambda_eff: ArrayLike = LAMBDA,
+    alpha: float = 2.0,
+) -> np.ndarray:
+    """Exact solution of dv/dt = -lambda_eff |v|^alpha v for a general exponent:
+
+        v(t) = v0 * (1 + alpha * lambda_eff * |v0|^alpha * t)^(-1/alpha).
+
+    ``alpha = 2`` reproduces :func:`exact_damping`.
+    """
+    v0 = _as_array(v0)
+    lam = np.asarray(lambda_eff, dtype=np.float64)
+    if lam.ndim > 0:
+        lam = lam[..., np.newaxis]
+    sq = _speed_sq(v0)
+    t_arr = np.asarray(t, dtype=np.float64)[..., np.newaxis]
+    if alpha == 2.0:
+        base = 1.0 + 2.0 * lam * sq * t_arr
+        factor = 1.0 / np.sqrt(base)
+    else:
+        base = 1.0 + alpha * lam * np.power(sq, 0.5 * alpha) * t_arr
+        factor = np.power(base, -1.0 / alpha)
+    zero = np.logical_or(sq == 0.0, t_arr == 0.0)
+    factor = np.where(zero, 1.0, factor)
+    return v0 * factor
 
 
 def damped_step(

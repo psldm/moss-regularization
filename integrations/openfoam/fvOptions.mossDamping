@@ -1,0 +1,36 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  Moss cubic damping  -lam |U|^2 U  as a semi-implicit coded source.
+  Copy into system/fvOptions (OpenFOAM.org v9+; adapt for other versions).
+\*---------------------------------------------------------------------------*/
+mossDamping
+{
+    type            vectorCodedSource;
+    selectionMode   all;
+    fields          (U);
+    name            mossDamping;
+
+    // damping number lam_code = lam_eff U^2 L of your nondimensionalisation
+    lam             0.5;
+
+    codeInclude
+    #{
+    #};
+
+    codeCorrect
+    #{
+    #};
+
+    codeAddSup
+    #{
+        const scalar lam = coeffs().lookup<scalar>("lam");
+        const volVectorField& U = eqn.psi();
+        const volScalarField magSqrU(magSqr(U));
+
+        // semi-implicit split:  S = Su + Sp*U  with  Sp = -lam |U|^2  (diagonal, <= 0)
+        eqn += fvm::Sp(-lam*magSqrU, U);
+    #};
+
+    codeConstrain
+    #{
+    #};
+}

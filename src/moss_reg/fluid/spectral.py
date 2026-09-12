@@ -280,6 +280,22 @@ class SpectralNS2D:
         u, v = self.velocity_padded()
         return float(np.mean((u * u + v * v) ** 2)) ** 0.25
 
+    def diagnostics(self) -> dict:
+        """Scalar diagnostics for :class:`~moss_reg.diagnostics.DiagnosticsLog`.
+
+        E, enstrophy, grad_l2_sq (= 2 * enstrophy for this solenoidal
+        field), l4, l4_pow4, linf, div_max, and the instantaneous damping
+        power ``vac_power = lam <|u|^4>`` feeding the vacuum reservoir.
+        """
+        from ..diagnostics.norms import field_norms
+
+        u, v = self.velocity()
+        # components in array-axis order: axis 0 is y, axis 1 is x
+        d = field_norms([v, u], box=2.0 * np.pi, pad=self.PAD_FACTOR)
+        d["vac_power"] = float(self.lam) * d["l4_pow4"]
+        d["steps"] = self.steps
+        return d
+
     def measure(self) -> Tuple[float, float, float]:
         """(E, Omega, L4): kinetic energy, enstrophy, L4 velocity norm.
 
