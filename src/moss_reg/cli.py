@@ -5,6 +5,7 @@ Usage:
     moss-reg compare   --type {particles,fluid} [options]
     moss-reg sweep     [options]
     moss-reg run-all   [--output DIR] [--quick]
+    moss-reg supplement [--report PATH] [--output PATH] [--copy-figures]
     moss-reg benchmark --type {decay,particles,fluid} [options]   (legacy)
 
 ``validate`` runs the PASS/FAIL self-checks (formulas, integrators,
@@ -38,6 +39,7 @@ from .benchmarks import (
     run_shell_crossing_sweep,
 )
 from .report import git_info, make_entry, sanitize, write_report
+from .supplement import write_supplement
 
 __all__ = ["main"]
 
@@ -121,6 +123,16 @@ def _build_parser() -> argparse.ArgumentParser:
     swp.add_argument("--dt", type=float, default=None, help="baseline maximum timestep")
     swp.add_argument("--h", type=float, default=None, help="baseline smoothing length")
     swp.add_argument("--softening", type=float, default=None, help="baseline softening")
+
+    sup = sub.add_parser("supplement", help="LaTeX supplementary material generated from report.json")
+    sup.add_argument("--report", default="assets/report.json", help="input report.json")
+    sup.add_argument("--output", default="supplement.tex", help="output .tex path")
+    sup.add_argument("--figures-dir", default="figures",
+                     help="figure directory relative to the output file (default: figures)")
+    sup.add_argument("--copy-figures", action="store_true",
+                     help="copy the report's figures into <output dir>/<figures-dir>")
+    sup.add_argument("--title", default="Supplementary Numerical Material")
+    sup.add_argument("--subtitle", default="")
 
     run_all = sub.add_parser("run-all", help="run every benchmark, sweep and validate")
     _add_output(run_all)
@@ -270,14 +282,24 @@ def cmd_run_all(args: argparse.Namespace, argv: Optional[List[str]] = None) -> i
     results = _validate.run_checks()
     print(_validate.format_table(results))
     entry = make_entry(
-        "validate", {}, {"failed": _validate.has_failures(results)}, [],
-        checks={r.name: r.status for r in results}, argv=argv, git=git,
+        "validate", {},
+        {"failed": _validate.has_failures(results), "results": [r.__dict__ for r in results]},
+        [], checks={r.name: r.status for r in results}, argv=argv, git=git,
     )
     write_report(outdir, entry)
     rc |= int(_validate.has_failures(results))
 
     print(f"\nfigures and report.json written to {outdir.resolve()}/")
     return rc
+
+
+def cmd_supplement(args: argparse.Namespace) -> int:
+    path = write_supplement(
+        Path(args.report), Path(args.output), figures_dir=args.figures_dir,
+        copy_figures=args.copy_figures, title=args.title, subtitle=args.subtitle,
+    )
+    print(f"supplement written to {path}")
+    return 0
 
 
 def cmd_benchmark(args: argparse.Namespace) -> int:
@@ -309,6 +331,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return cmd_sweep(args, argv_list)
         if args.command == "run-all":
             return cmd_run_all(args, argv_list)
+        if args.command == "supplement":
+            return cmd_supplement(args)
         return cmd_benchmark(args)
     except Exception as exc:  # pragma: no cover - CLI error path
         print(f"moss-reg: error: {type(exc).__name__}: {exc}", file=sys.stderr)

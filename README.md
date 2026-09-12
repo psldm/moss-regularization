@@ -187,9 +187,9 @@ Crossing time $t_\times$ of the damped run (classical: $t_\times \approx
 * For $c \ge 2$ (compactness $\le 0.25$, $v_{\mathrm{ff}} < c$) the
   damped and classical runs cross at the same time to within $0.03$.
 
-**Consequently, $J > 0$ throughout a run (the numerical content of
-"Theorem D.1") is not established by these simulations in any physically
-admissible regime.** The 0.1.0 figure and the accompanying statement have
+**Consequently, $J > 0$ throughout a run (labelled "Theorem D.1" in the
+0.1.0 documentation, although no such theorem exists in the paper) is not
+established by these simulations in any physically admissible regime.** The 0.1.0 figure and the accompanying statement have
 been withdrawn; the physical-regime comparison
 (`02_shell_crossing_arrest.png`, compactness 0.1) shows the two runs on
 top of each other.
@@ -228,6 +228,7 @@ moss-reg compare --type particles --c 0.005   # the 0.1.0 strong-coupling regime
 moss-reg compare --type fluid --lambda 0.5 --re 200
 moss-reg sweep                          # c x N, dt, h, softening (~30 s)
 moss-reg run-all                        # everything into assets/ + report.json
+moss-reg supplement --copy-figures      # supplement.tex from report.json
 ```
 
 ## CLI reference
@@ -253,6 +254,11 @@ moss-reg sweep [--output DIR] [--quick] [--t-max T] [--dt DT] [--h H] [--softeni
 
 moss-reg run-all [--output DIR] [--quick]
     decay, compare:particles, sweep, compare:fluid, validate -> DIR/report.json
+
+moss-reg supplement [--report PATH] [--output PATH] [--figures-dir DIR] [--copy-figures]
+    LaTeX supplementary material generated from report.json: provenance,
+    full validation table, all parameters and metrics, sweep grid and
+    sensitivity tables, figures. Compile with pdflatex/latexmk.
 
 moss-reg benchmark --type {decay,particles,fluid} [options]      (legacy)
 ```

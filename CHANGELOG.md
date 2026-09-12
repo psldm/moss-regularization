@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.1 (2026-09-11)
+
+### Added
+- `moss-reg supplement`: LaTeX supplementary material generated entirely from
+  `report.json` (provenance, full validation table, every parameter and
+  metric, complete sweep grid and sensitivity tables, figures), so the
+  paper's numerical appendix cannot drift from the code.
+- `run-all` stores the full validation results (group, name, status, detail,
+  timing) in the report, not only the statuses.
+
+### Fixed
+- Removed references to a "Theorem D.1" from docstrings, tests and README:
+  no such theorem exists in the accompanying paper or its technical
+  appendix; the label was introduced by the 0.1.0 documentation.
+
 ## 0.2.0 (2026-09-11)
 
 ### Fixed

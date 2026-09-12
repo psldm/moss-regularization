@@ -1,5 +1,5 @@
 """Tests for the Lagrangian particle module: kernels, density, integrator
-and the Theorem D.1 shell-crossing monitor (J > 0)."""
+and the shell-crossing monitor (J > 0 while the Lagrangian map is invertible)."""
 
 import numpy as np
 import pytest

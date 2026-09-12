@@ -5,8 +5,9 @@ The Lagrangian map q -> x(q, t) has Jacobian matrix
     J_ij = d x_i / d q_j,   J = det(J).
 
 For an invertible (no shell-crossing) flow the determinant stays
-strictly positive, J(q, t) > 0 (Theorem D.1).  Shell crossing is
-signalled by J <= 0.
+strictly positive, J(q, t) > 0.  Shell crossing is signalled by J <= 0.
+(Release 0.1.0 referred to a "Theorem D.1" here; no such theorem exists
+in the accompanying paper, and the label is dropped.)
 
 * 1D:  J_i = (x_{i+1} - x_i) / (q_{i+1} - q_i) over the sorted
        Lagrangian ordering.
