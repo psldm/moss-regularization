@@ -165,3 +165,25 @@ def test_energy_identity_with_damping_every_step_quadrature():
     _, t, e, o, l4 = _run_series(48, nu, lam, 3.0, snap_dt=None)
     predicted = e[0] - np.trapezoid(2.0 * nu * o + lam * l4**4, t)
     assert abs(e[-1] - predicted) < 1e-5
+
+
+def test_split_mode_2d_budget_and_agreement():
+    from moss_reg.diagnostics import DiagnosticsLog
+
+    def run(mode, dt, T=0.5, lam=5.0, nu=0.01):
+        s = SpectralNS2D(32, nu=nu, lam=lam, dt_max=dt, damping_mode=mode)
+        s.set_taylor_green()
+        log = DiagnosticsLog()
+        log.record(s.time, **s.diagnostics())
+        while s.time < T - 1e-12:
+            s.step(min(dt, T - s.time))
+            log.record(s.time, **s.diagnostics())
+        return s, log
+    s, log = run("split", 0.005)
+    assert log.budget(nu=0.01).max_abs_residual < 1e-6
+    assert log.budget(nu=0.01).max_abs_residual < run("rhs", 0.005)[1].budget(nu=0.01).max_abs_residual
+    assert s.energy_to_vacuum > 0 and s.energy_split_loss < 1e-2 * s.energy_to_vacuum
+    e_ref = run("rhs", 0.00125)[1].series("E")[-1]
+    d1 = abs(run("split", 0.01)[1].series("E")[-1] - e_ref)
+    d2 = abs(run("split", 0.005)[1].series("E")[-1] - e_ref)
+    assert d1 < 1e-3 and 1.6 < d1 / d2 < 2.6

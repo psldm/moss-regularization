@@ -98,3 +98,49 @@ def test_tg3d_sweep_smoke(tmp_path):
     assert len(m["classical"]) == 2 and len(m["damped"]) == 3
     assert m["threshold_lambda_4lam_over_re_eq_1"] == pytest.approx(25.0)
     assert all((tmp_path / Path(c).name).is_file() for c in m["timeseries_csv"])
+
+
+def _run_mode(mode, dt, lam=5.0, n=16, nu=0.01, T=0.5):
+    s = SpectralNS3D(n, nu=nu, lam=lam, dt_max=dt, damping_mode=mode)
+    s.set_taylor_green()
+    log = DiagnosticsLog()
+    log.record(s.time, **s.diagnostics())
+    while s.time < T - 1e-12:
+        s.step(min(dt, T - s.time))
+        log.record(s.time, **s.diagnostics())
+    return s, log
+
+
+def test_split_mode_budget_closes_exactly_and_agrees_with_rhs_mode():
+    s_split, log_split = _run_mode("split", 0.005)
+    b = log_split.budget(nu=0.01)
+    assert b.summary()["vac_exact"] is True
+    # the vacuum part is exact; what remains is the viscous-power quadrature (O(dt^2))
+    assert b.max_abs_residual < 1e-6
+    assert b.max_abs_residual < _run_mode("rhs", 0.005)[1].budget(nu=0.01).max_abs_residual
+    assert s_split.energy_to_vacuum > 0.0
+    assert 0.0 <= s_split.energy_split_loss < 1e-2 * s_split.energy_to_vacuum
+    # both discretizations converge to the same solution; the split mode is first order in dt
+    # (the pointwise substep does not commute with the divergence-free projection)
+    e_rhs_fine = _run_mode("rhs", 0.00125)[1].series("E")[-1]
+    d1 = abs(_run_mode("split", 0.01)[1].series("E")[-1] - e_rhs_fine)
+    d2 = abs(_run_mode("split", 0.005)[1].series("E")[-1] - e_rhs_fine)
+    assert d1 < 1e-3 and 1.6 < d1 / d2 < 2.6
+
+
+def test_split_mode_has_no_damping_dt_limit_and_handles_large_lambda():
+    s = SpectralNS3D(16, nu=0.01, lam=200.0, dt_max=0.02, damping_mode="split")
+    s.set_taylor_green()
+    assert np.isinf(s.dt_limits()["damping"])
+    log = DiagnosticsLog()
+    log.record(s.time, **s.diagnostics())
+    for _ in range(10):
+        s.step(s.cfl_dt())
+        log.record(s.time, **s.diagnostics())
+    assert log.budget(nu=0.01).max_abs_residual < 1e-4      # flow dies within a few steps; viscous quadrature limited
+    assert log.series("E")[-1] < 0.05 * log.series("E")[0]     # strong damping acted
+
+
+def test_invalid_damping_mode():
+    with pytest.raises(ValueError):
+        SpectralNS3D(8, damping_mode="magic")

@@ -43,7 +43,21 @@ class SpectralNS3D:
         dealias: bool = True,
         cubic_dealias: bool = True,
         workers: int = -1,
+        damping_mode: str = "rhs",
     ) -> None:
+        """``damping_mode``: ``"rhs"`` evaluates the damping term inside the
+        RK4 right-hand side (fourth order, stiffness limit on dt);
+        ``"split"`` applies the exact pointwise substep symmetrically (half
+        damping, RK4 for the Navier-Stokes part, half damping), each half
+        followed by truncation and projection.  No dt limit from the
+        damping and an exactly accumulated ``energy_to_vacuum``; because the
+        pointwise substep does not commute with the divergence-free
+        projection the split mode is first order in dt (tested)."""
+        if damping_mode not in ("rhs", "split"):
+            raise ValueError("damping_mode must be 'rhs' or 'split'")
+        self.damping_mode = damping_mode
+        self.energy_to_vacuum = 0.0      # exact, split mode only
+        self.energy_split_loss = 0.0     # truncation + projection loss of the substep
         self.n = int(n)
         self.nu = float(nu)
         self.dt_max = float(dt_max)
@@ -182,6 +196,25 @@ class SpectralNS3D:
 
     # -- right-hand side ---------------------------------------------------
 
+    def _damp_exact(self, tau: float) -> None:
+        """Exact damping substep over tau on the padded grid, then truncation
+        to the retained band and projection (symmetric half step)."""
+        u = [self._pad_to_real(h) for h in self.u_hat]
+        speed2 = sum(ui * ui for ui in u)
+        lam = self._lam_pad if self.lam_field is not None else self.lam
+        factor = 1.0 / np.sqrt(1.0 + 2.0 * lam * speed2 * tau)
+        e_before = 0.5 * float(np.mean(speed2))
+        u = [ui * factor for ui in u]
+        e_mid = 0.5 * float(np.mean(sum(ui * ui for ui in u)))
+        self.energy_to_vacuum += e_before - e_mid
+        hats = self._project([self._real_to_unpadded(ui) for ui in u])
+        for h in hats:
+            h *= self.mask
+            h[0, 0, 0] = 0.0
+        e_after = 0.5 * float(sum(np.sum(np.abs(h) ** 2) for h in hats) / self.n**6)
+        self.energy_split_loss += e_mid - e_after
+        self.u_hat = hats
+
     def _rhs(self, hats: Sequence[np.ndarray]) -> List[np.ndarray]:
         hats = self._project(hats)
         u = [self._ifft(h) for h in hats]
@@ -194,7 +227,7 @@ class SpectralNS3D:
             -(w[0] * u[1] - w[1] * u[0]),
         ]
         rhs = [-self.nu * self.k2 * h + self._fft(a) for h, a in zip(hats, adv)]
-        if self.has_damping:
+        if self.has_damping and self.damping_mode == "rhs":
             damp = self.damping_term(hats)
             rhs = [r - d for r, d in zip(rhs, damp)]
         out = []
@@ -208,6 +241,9 @@ class SpectralNS3D:
 
     def step(self, dt: Optional[float] = None) -> None:
         dt = self.dt_max if dt is None else float(dt)
+        split = self.has_damping and self.damping_mode == "split"
+        if split:
+            self._damp_exact(0.5 * dt)
         u0 = self.u_hat
         k1 = self._rhs(u0)
         k2 = self._rhs([a + 0.5 * dt * b for a, b in zip(u0, k1)])
@@ -217,6 +253,8 @@ class SpectralNS3D:
                for a, b1, b2, b3, b4 in zip(u0, k1, k2, k3, k4)]
         self.u_hat = self._project(new)
         self._enforce_mask()
+        if split:
+            self._damp_exact(0.5 * dt)
         self.time += dt
         self.steps += 1
 
@@ -226,7 +264,8 @@ class SpectralNS3D:
         umax = float(np.sqrt(umax2))
         dt_adv = np.inf if umax == 0.0 else cfl / (self.kmax * umax)
         dt_visc = np.inf if self.nu == 0.0 else cfl * 2.0 / (self.nu * self.kmax**2)
-        dt_damp = (np.inf if (not self.has_damping or self.lam_max == 0.0 or umax2 == 0.0)
+        dt_damp = (np.inf if (not self.has_damping or self.lam_max == 0.0 or umax2 == 0.0
+                              or self.damping_mode == "split")
                    else cfl * 2.0 / (3.0 * self.lam_max * umax2))
         return {"advection": dt_adv, "viscosity": dt_visc, "damping": dt_damp}
 
@@ -263,6 +302,9 @@ class SpectralNS3D:
         d["eta"] = float(eta)
         d["kmax_eta"] = float(self.kmax * eta)
         d["tail_fraction"] = spectral_tail_fraction(self.u_hat, self.k2, self.kmax)
+        if self.damping_mode == "split":
+            d["E_vac_exact"] = self.energy_to_vacuum
+            d["E_split_loss"] = self.energy_split_loss
         d["steps"] = self.steps
         return d
 

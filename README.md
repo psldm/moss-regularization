@@ -30,6 +30,7 @@ moss-reg compare --type fluid     # 2D Taylor-Green, classical vs damped: PNG + 
 moss-reg compare --type particles # 1D collapse, classical vs damped (physical regime)
 moss-reg compare --type fluid3d   # 3D Taylor-Green at 32^3, ~2 min
 moss-reg sweep                    # shell-crossing sweep over c x N, dt, h, softening, ~30 s
+moss-reg sweep3d                  # 3D resolution x damping-number sweep, ~1 h at 64^3
 moss-reg run-all                  # all of the above into assets/ + report.json (+ --no-3d)
 moss-reg supplement --copy-figures  # LaTeX supplement generated from report.json
 ```
@@ -211,16 +212,40 @@ a zero-padded $2n$ grid (exact; `validate` shows the spurious mode the
 $\lambda(\mathbf{x})$. `dt_limits()` reports the advection, viscous and
 damping limits.
 
+Two ways to apply the damping (`damping_mode`):
+
+* `"rhs"` (default): the term is part of the RK4 right-hand side; it carries
+  the stiffness limit $\Delta t \le \mathrm{CFL}\cdot 2/(3\lambda|u|_{\max}^2)$
+  and the energy handed to the reservoir is obtained by quadrature of
+  $\lambda\|u\|_4^4$.
+* `"split"`: Strang splitting, half exact substep on the padded grid,
+  RK4 for the Navier–Stokes part, half exact substep, each followed by
+  truncation and projection. No timestep limit from the damping, the
+  reservoir energy `energy_to_vacuum` is accumulated exactly, and the
+  small truncation/projection loss of the substep is reported separately
+  (`energy_split_loss`). Because the pointwise substep does not commute
+  with the divergence-free projection this mode is **first order** in
+  $\Delta t$ (the two modes converge to each other as $\Delta t$, tested);
+  `moss-reg sweep3d` uses `"split"` so that large damping numbers cost
+  nothing extra, at $\Delta t = 0.01$ the two modes differ by $\sim 10^{-4}$
+  relative in the energy.
+
 * `compare --type fluid` (2D Taylor–Green, $Re = 200$, $n = 64$): classical
   run reproduces the exact viscous decay to $5\times10^{-15}$; the damped
   run satisfies the energy identity with residual $4\times10^{-7}$. 2D
   Navier–Stokes has no finite-time blow-up: this verifies the solver.
 * `compare --type fluid3d` (3D Taylor–Green, $Re = 800$, $32^3$): energy,
   enstrophy, $\|\omega\|_\infty$, $\|u\|_4$ for both runs, energy budget
-  residual as a check, and the resolution indicator $k_{\max}\eta$ with
-  $\eta = (\nu^3/\varepsilon)^{1/4}$. The classical run is under-resolved
-  once the enstrophy grows; the figure says from when. This is the natural
-  next experiment for the open case, not a result about it.
+  residual as a check, and two resolution indicators: the spectral tail
+  fraction (energy at $|k| > 0.8\,k_{\max}$; above $10^{-3}$ the run is
+  called under-resolved, and the figure marks from when) and the turbulence
+  criterion $k_{\max}\eta$ with $\eta = (\nu^3/\varepsilon)^{1/4}$.
+* `sweep3d`: the classical run at several resolutions (which $N$ stays
+  resolved over the horizon) and the damped run over a range of damping
+  numbers, with the threshold $4\lambda_{\mathrm{code}}/Re = 1$ of the
+  regularity theorem marked. Long (about an hour at $64^3$); the numbers it
+  produces are the honest 3D input to the paper, not a result about the
+  open case.
 
 ## Particles: 1D cold collapse
 
@@ -274,6 +299,8 @@ moss-reg compare --type {particles,fluid,fluid3d} [--output DIR] [options]
     Exit 1 if a sanity check fails.
 
 moss-reg sweep [--output DIR] [--quick] [--t-max T] [--dt DT] [--h H] [--softening E]
+moss-reg sweep3d [--output DIR] [--quick] [--re RE] [--t-max T] [--dt DT]
+                 [--classical-n N ...] [--damped-n N ...] [--lambdas X ...] [--lambdas-small-n X ...]
 moss-reg run-all [--output DIR] [--quick] [--no-3d]
 moss-reg supplement [--report PATH] [--output PATH] [--figures-dir DIR] [--copy-figures]
 moss-reg benchmark --type {decay,particles,fluid} [options]      (legacy)
@@ -285,7 +312,8 @@ moss-reg benchmark --type {decay,particles,fluid} [options]      (legacy)
 | `assets/02_shell_crossing_arrest.png` | 1D collapse, classical vs. damped at compactness 0.1 |
 | `assets/02_shell_crossing_sweep.png` | crossing time vs. $c$ and $N$, speed cap, sensitivities, Jacobian histories |
 | `assets/03_cfd_stability.png` | 2D Taylor–Green: enstrophy, $L^4$ norm, energy |
-| `assets/05_tg3d.png` | 3D Taylor–Green: energy, enstrophy, $\|\omega\|_\infty$, $L^4$ norm, $k_{\max}\eta$ marker |
+| `assets/05_tg3d.png` | 3D Taylor–Green: energy, enstrophy, $\|\omega\|_\infty$, $L^4$ norm, under-resolution marker |
+| `assets/06_tg3d_sweep.png` | 3D sweep: classical enstrophy vs. $N$, damped enstrophy vs. $\lambda_{\mathrm{code}}$, peak values with the $4\lambda/Re = 1$ threshold, spectral tails |
 
 ## Layout
 

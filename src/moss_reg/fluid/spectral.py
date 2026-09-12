@@ -74,7 +74,13 @@ class SpectralNS2D:
         dt_max: float = 0.005,
         dealias: bool = True,
         cubic_dealias: bool = True,
+        damping_mode: str = "rhs",
     ) -> None:
+        if damping_mode not in ("rhs", "split"):
+            raise ValueError("damping_mode must be 'rhs' or 'split'")
+        self.damping_mode = damping_mode
+        self.energy_to_vacuum = 0.0
+        self.energy_split_loss = 0.0
         self.n = int(n)
         self.nu = float(nu)
         self.dt_max = float(dt_max)
@@ -241,6 +247,26 @@ class SpectralNS2D:
         f = self.lam_field * (u * u + v * v)
         return np.fft.fft2(f * u), np.fft.fft2(f * v)
 
+    def _damp_exact(self, tau: float) -> None:
+        """Exact damping substep over tau (padded grid), truncation, projection."""
+        u = self._pad_to_real(self.u_hat)
+        v = self._pad_to_real(self.v_hat)
+        speed2 = u * u + v * v
+        lam = self._lam_pad if self.lam_field is not None else self.lam
+        factor = 1.0 / np.sqrt(1.0 + 2.0 * lam * speed2 * tau)
+        e_before = 0.5 * float(np.mean(speed2))
+        u, v = u * factor, v * factor
+        e_mid = 0.5 * float(np.mean(u * u + v * v))
+        self.energy_to_vacuum += e_before - e_mid
+        u_hat, v_hat = self._project(self._real_to_unpadded(u), self._real_to_unpadded(v))
+        u_hat *= self.mask
+        v_hat *= self.mask
+        u_hat[0, 0] = 0.0
+        v_hat[0, 0] = 0.0
+        e_after = 0.5 * float((np.sum(np.abs(u_hat) ** 2) + np.sum(np.abs(v_hat) ** 2)) / self.n**4)
+        self.energy_split_loss += e_mid - e_after
+        self.u_hat, self.v_hat = u_hat, v_hat
+
     # -- right-hand side ---------------------------------------------------
 
     def _rhs(
@@ -259,7 +285,7 @@ class SpectralNS2D:
         adv_v = -(u * vx + v * vy)
         rhs_u = -self.nu * self.k2 * u_hat + np.fft.fft2(adv_u)
         rhs_v = -self.nu * self.k2 * v_hat + np.fft.fft2(adv_v)
-        if self.has_damping:
+        if self.has_damping and self.damping_mode == "rhs":
             du, dv = self.damping_term(u_hat, v_hat)
             rhs_u -= du
             rhs_v -= dv
@@ -274,6 +300,9 @@ class SpectralNS2D:
     def step(self, dt: Optional[float] = None) -> None:
         """One explicit RK4 step with projection after each stage input."""
         dt = self.dt_max if dt is None else float(dt)
+        split = self.has_damping and self.damping_mode == "split"
+        if split:
+            self._damp_exact(0.5 * dt)
         u0, v0 = self.u_hat, self.v_hat
         k1u, k1v = self._rhs(u0, v0)
         k2u, k2v = self._rhs(u0 + 0.5 * dt * k1u, v0 + 0.5 * dt * k1v)
@@ -283,6 +312,8 @@ class SpectralNS2D:
         self.v_hat = v0 + dt / 6.0 * (k1v + 2.0 * k2v + 2.0 * k3v + k4v)
         self.u_hat, self.v_hat = self._project(self.u_hat, self.v_hat)
         self._enforce_mask()
+        if split:
+            self._damp_exact(0.5 * dt)
         self.time += dt
         self.steps += 1
 
@@ -298,7 +329,8 @@ class SpectralNS2D:
         # stability ~2.8; cfl * 2/3 keeps a comfortable margin)
         dt_damp = (
             np.inf
-            if (not self.has_damping or self.lam_max == 0.0 or umax2 == 0.0)
+            if (not self.has_damping or self.lam_max == 0.0 or umax2 == 0.0
+                or self.damping_mode == "split")
             else cfl * 2.0 / (3.0 * self.lam_max * umax2)
         )
         return {"advection": dt_adv, "viscosity": dt_visc, "damping": dt_damp}
@@ -343,6 +375,9 @@ class SpectralNS2D:
             d["vac_power"] = float(np.mean(self._lam_pad * (up * up + vp * vp) ** 2))
         kmax = float(np.sqrt(np.max(self.k2 * self.mask)))
         d["tail_fraction"] = spectral_tail_fraction([self.u_hat, self.v_hat], self.k2, kmax)
+        if self.damping_mode == "split":
+            d["E_vac_exact"] = self.energy_to_vacuum
+            d["E_split_loss"] = self.energy_split_loss
         d["steps"] = self.steps
         return d
 

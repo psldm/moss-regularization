@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Operator-split exact damping for both spectral solvers
+  (`damping_mode="split"`): Strang splitting with the exact substep on the
+  padded grid, no timestep limit from the damping, exactly accumulated
+  `energy_to_vacuum` and a separately reported truncation/projection loss;
+  first order in dt (the pointwise substep does not commute with the
+  projection), converges to the `"rhs"` mode as dt (tested).
+- `moss-reg sweep3d`: 3D Taylor-Green sweep over resolution (classical) and
+  damping number (damped, split mode), with the regularity threshold
+  4 lambda / Re = 1 marked; figure 06 and per-run CSV.
+- `EnergyBudget` accepts exact E_vac and extra-loss series.
+- PyPI publication workflow (Trusted Publishing on GitHub release), PyTorch
+  adapter CI job, `CONTRIBUTING.md`, issue templates.
+
 ## 0.3.0 (2026-09-12)
 
 ### Added

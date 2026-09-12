@@ -35,8 +35,9 @@ from .tg3d import TAIL_LIMIT
 __all__ = ["run_tg3d_sweep"]
 
 
-def _run(n: int, nu: float, lam: float, t_max: float, dt_max: float, diag_every: int) -> Dict[str, object]:
-    s = SpectralNS3D(n, nu=nu, lam=lam, dt_max=dt_max)
+def _run(n: int, nu: float, lam: float, t_max: float, dt_max: float, diag_every: int,
+         damping_mode: str = "split") -> Dict[str, object]:
+    s = SpectralNS3D(n, nu=nu, lam=lam, dt_max=dt_max, damping_mode=damping_mode)
     s.set_taylor_green()
     log = DiagnosticsLog()
     log.record(s.time, **s.diagnostics())
@@ -56,6 +57,8 @@ def _run(n: int, nu: float, lam: float, t_max: float, dt_max: float, diag_every:
     i_pk = int(np.argmax(enst))
     return {
         "n": n, "lam": lam, "re": 1.0 / nu, "t_max": t_max, "dt_max": dt_max, "diag_every": diag_every,
+        "damping_mode": damping_mode if lam else "none",
+        "E_split_loss": float(getattr(s, "energy_split_loss", 0.0)),
         "steps": s.steps, "dt_min": float(dt_min), "wall_s": wall,
         "enstrophy_peak": float(enst[i_pk]), "enstrophy_peak_time": float(log.t[i_pk]),
         "omega_max_peak": float(np.max(log.series("omega_max"))),
@@ -87,10 +90,13 @@ def run_tg3d_sweep(
     quick: bool = False,
     diag_every_large: int = 5,
     large_n: int = 64,
+    damping_mode: str = "split",
 ) -> Dict[str, object]:
     """Resolution sweep of the classical run and lam_code sweep of the damped
-    run.  ``lam_values_small_n`` are run only at the smallest damped N (the
-    explicit time step shrinks like 1/lam)."""
+    runs.  Damped runs use the operator-split exact substep by default
+    (``damping_mode="split"``): no dt limit from the damping and an exactly
+    accumulated E_vac, so the energy budget closes at every damping number.
+    ``lam_values_small_n`` are run only at the smallest damped N."""
     if quick:
         classical_n_values, damped_n_values = (8, 16), (8,)
         lam_values, lam_values_small_n, t_max = (0.5, 5.0), (50.0,), 1.0
@@ -108,7 +114,7 @@ def run_tg3d_sweep(
     for n in damped_n_values:
         lams = list(lam_values) + (list(lam_values_small_n) if n == min(damped_n_values) else [])
         for lam in lams:
-            damped.append(_run(n, nu, lam, t_max, dt_max, dev(n)))
+            damped.append(_run(n, nu, lam, t_max, dt_max, dev(n), damping_mode))
 
     # -- figure --------------------------------------------------------------
     fig, axes = plt.subplots(2, 2, figsize=(13, 9.2))
@@ -184,8 +190,11 @@ def run_tg3d_sweep(
         csvs.append(str(p))
 
     resolved_n = [c["n"] for c in classical if c["resolved"]]
+    e0 = 0.125          # Taylor-Green initial kinetic energy per unit volume
     checks = {
-        "all_budgets_closed": all(r["budget_max_abs_residual"] < 1e-5 for r in classical + damped),
+        # residual of E(t) = E0 - D_visc - E_vac (- E_split): time-quadrature error of the
+        # recorded powers plus the scheme's energy error; required below 0.1 % of E0
+        "all_budgets_closed": all(r["budget_max_abs_residual"] < 1e-3 * e0 for r in classical + damped),
         "all_finite": all(np.isfinite(r["enstrophy_peak"]) for r in classical + damped),
     }
     return {
@@ -201,7 +210,7 @@ def run_tg3d_sweep(
             "re": re, "t_max": t_max, "dt_max": dt_max, "classical_n_values": list(classical_n_values),
             "damped_n_values": list(damped_n_values), "lam_values": list(lam_values),
             "lam_values_small_n": list(lam_values_small_n), "quick": quick,
-            "diag_every_large": diag_every_large, "large_n": large_n,
+            "diag_every_large": diag_every_large, "large_n": large_n, "damping_mode": damping_mode,
         },
         "checks": checks,
         "figure": str(path),

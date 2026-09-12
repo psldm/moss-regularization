@@ -95,4 +95,7 @@ class DiagnosticsLog:
             vac = lam * self.series("l4_pow4")
         else:
             raise KeyError("need a 'vac_power' series or lam and 'l4_pow4'")
-        return EnergyBudget(self.t, self.series("E"), nu * self.series(grad_key), vac)
+        e_vac_exact = self.series("E_vac_exact") if "E_vac_exact" in self._keys else None
+        extra = self.series("E_split_loss") if "E_split_loss" in self._keys else None
+        return EnergyBudget(self.t, self.series("E"), nu * self.series(grad_key), vac,
+                            e_vac_exact=e_vac_exact, extra_loss=extra)
