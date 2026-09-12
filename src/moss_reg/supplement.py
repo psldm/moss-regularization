@@ -32,12 +32,14 @@ def tt(text: Any) -> str:
     return r"\texttt{" + esc(text) + "}"
 
 
-def num(x: Any, digits: int = 4) -> str:
+def num(x: Any, digits: int = 4, bool_as_check: bool = False) -> str:
     """Format a number (or None / 'inf' / bool) for a table cell."""
     if x is None:
         return "---"
     if isinstance(x, bool):
-        return "PASS" if x else "FAIL"
+        if bool_as_check:
+            return "PASS" if x else "FAIL"
+        return "true" if x else "false"
     if isinstance(x, str):
         if x in ("inf", "-inf"):
             return r"$\infty$" if x == "inf" else r"$-\infty$"
@@ -58,16 +60,19 @@ def num(x: Any, digits: int = 4) -> str:
     return esc(x)
 
 
-def _kv_table(d: Dict[str, Any], caption: str, label: str) -> str:
+def _kv_table(d: Dict[str, Any], caption: str, label: str, checks: bool = False,
+              skip: Iterable[str] = ("params",)) -> str:
     rows = []
     for k, v in d.items():
+        if k in skip:
+            continue
         if isinstance(v, dict):
             for kk, vv in v.items():
-                rows.append(f"{tt(k)}.{tt(kk)} & {num(vv)} \\\\")
+                rows.append(f"{tt(k)}.{tt(kk)} & {num(vv, bool_as_check=checks)} \\\\")
         elif isinstance(v, list) and v and isinstance(v[0], dict):
             rows.append(f"{tt(k)} & [{len(v)} records, see below] \\\\")
         else:
-            rows.append(f"{tt(k)} & {num(v)} \\\\")
+            rows.append(f"{tt(k)} & {num(v, bool_as_check=checks)} \\\\")
     body = "\n".join(rows)
     return (
         "\\begin{table}[H]\n\\centering\n\\small\n"
@@ -151,7 +156,7 @@ def _simple_run(run: Dict[str, Any], title: str, figures_dir: str, fig_caption: 
     out += _kv_table(run.get("params", {}), f"Parameters of {tt(cmd)}.", f"tab:{cmd}:params")
     out += _kv_table(metrics, f"Metrics of {tt(cmd)}.", f"tab:{cmd}:metrics")
     if run.get("checks"):
-        out += _kv_table(run["checks"], f"Checks of {tt(cmd)}.", f"tab:{cmd}:checks")
+        out += _kv_table(run["checks"], f"Checks of {tt(cmd)}.", f"tab:{cmd}:checks", checks=True)
     for fig in run.get("figures", []):
         out += _figure(fig, fig_caption, f"fig:{cmd}", figures_dir)
     return out
@@ -179,7 +184,7 @@ def _sweep(run: Dict[str, Any], figures_dir: str) -> str:
         for n in n_values:
             r = next((x for x in runs if int(x["n"]) == n and x["c"] == c), None)
             cells.append(cell(r) if r else "---")
-        rows.append(f"{num(c, 3)} & {num(1.0 / c**2, 3)} & " + " & ".join(cells) + " \\\\")
+        rows.append(f"{num(c, 3)} & {1.0 / c**2:g} & " + " & ".join(cells) + " \\\\")
     ref = m.get("classical_reference", {})
     ref_row = " & ".join(num(ref.get(str(n), ref.get(n, {})).get("t_cross"), 3) for n in n_values)
     out += (
@@ -230,7 +235,7 @@ def _sweep(run: Dict[str, Any], figures_dir: str) -> str:
     summary = {k: v for k, v in m.items() if k not in ("runs", "classical_reference", "sensitivity", "sensitivity_classical")}
     out += _kv_table(summary, "Sweep summary metrics.", "tab:sweep:summary")
     if run.get("checks"):
-        out += _kv_table(run["checks"], "Sweep checks.", "tab:sweep:checks")
+        out += _kv_table(run["checks"], "Sweep checks.", "tab:sweep:checks", checks=True)
     for fig in run.get("figures", []):
         out += _figure(fig, "Shell-crossing sweep figure as written by \\texttt{moss-reg sweep}.", "fig:sweep", figures_dir)
     return out
