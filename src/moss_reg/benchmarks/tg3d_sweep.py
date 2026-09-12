@@ -44,8 +44,9 @@ def _run(n: int, nu: float, lam: float, t_max: float, dt_max: float, diag_every:
     t0 = time.perf_counter()
     dt_min = np.inf
     while s.time < t_max - 1e-14:
-        dt = min(s.cfl_dt(), t_max - s.time)
-        dt_min = min(dt_min, dt)
+        dt_lim = s.cfl_dt()
+        dt_min = min(dt_min, dt_lim)          # limit of the scheme, not the clipped final step
+        dt = min(dt_lim, t_max - s.time)
         s.step(dt)
         if s.steps % diag_every == 0 or s.time >= t_max - 1e-14:
             log.record(s.time, **s.diagnostics())
@@ -85,7 +86,7 @@ def run_tg3d_sweep(
     dt_max: float = 0.01,
     classical_n_values: Sequence[int] = (32, 64, 96),
     damped_n_values: Sequence[int] = (32, 64),
-    lam_values: Sequence[float] = (0.5, 5.0, 50.0),
+    lam_values: Sequence[float] = (0.05, 0.2, 0.5, 5.0, 50.0),
     lam_values_small_n: Sequence[float] = (200.0,),
     quick: bool = False,
     diag_every_large: int = 5,
