@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 (2026-09-12)
 
 ### Added
 - Operator-split exact damping for both spectral solvers
@@ -9,9 +9,14 @@
   `energy_to_vacuum` and a separately reported truncation/projection loss;
   first order in dt (the pointwise substep does not commute with the
   projection), converges to the `"rhs"` mode as dt (tested).
-- `moss-reg sweep3d`: 3D Taylor-Green sweep over resolution (classical) and
-  damping number (damped, split mode), with the regularity threshold
-  4 lambda / Re = 1 marked; figure 06 and per-run CSV.
+- `moss-reg sweep3d`: 3D Taylor-Green sweep over resolution (classical at
+  32^3, 64^3, 96^3) and damping number (damped, split mode, lambda_code =
+  0.05 ... 50 at 64^3 and up to 200 at 32^3), with the regularity threshold
+  4 lambda / Re = 1 marked; figure 06 and per-run CSV. Result: at Re = 800
+  no resolution up to 96^3 stays spectrally resolved to t = 6; the damping
+  changes the classical curves only for lambda_code >= 0.05 and extinguishes
+  the flow for lambda_code >= 5, so the theorem's threshold (200) lies in
+  the extinguished regime.
 - `EnergyBudget` accepts exact E_vac and extra-loss series.
 - PyPI publication workflow (Trusted Publishing on GitHub release), PyTorch
   adapter CI job, `CONTRIBUTING.md`, issue templates.

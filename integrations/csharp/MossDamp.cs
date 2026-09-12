@@ -7,7 +7,7 @@ namespace MossRegularization
     /// <summary>Exact damping substep, direction preserving, no stability limit.</summary>
     public static class MossDamp
     {
-        public const string Version = "0.3.0";
+        public const string Version = "0.4.0";
 
         /// <summary>Magnitude factor f with v_new = f v, cubic damping (alpha = 2).</summary>
         public static double Factor(double speed2, double lam, double dt)

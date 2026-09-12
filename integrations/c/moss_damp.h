@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#define MOSS_DAMP_VERSION "0.3.0"
+#define MOSS_DAMP_VERSION "0.4.0"
 
 /* Magnitude factor f such that v_new = f * v, cubic damping. */
 static inline double moss_damp_factor(double speed2, double lam, double dt)
