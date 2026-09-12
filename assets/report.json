@@ -3,19 +3,19 @@
   "runs": [
     {
       "command": "decay",
-      "timestamp_utc": "2026-09-12T02:30:07+00:00",
+      "timestamp_utc": "2026-09-12T03:29:33+00:00",
       "argv": [
         "run-all",
         "--output",
         "assets"
       ],
       "git": {
-        "commit": "33851d45f22a85ceed26921344382a6013617fe4",
-        "dirty": false,
+        "commit": "8d60e0c5fd2f68802ce122f437205dfd9939f032",
+        "dirty": true,
         "root": "/projects/Navier\u2013Stokes/moss-reg"
       },
       "environment": {
-        "moss_reg": "0.2.1",
+        "moss_reg": "0.3.0",
         "python": "3.14.7",
         "numpy": "2.4.6",
         "scipy": "1.16.2",
@@ -56,19 +56,19 @@
     },
     {
       "command": "compare:particles",
-      "timestamp_utc": "2026-09-12T02:30:09+00:00",
+      "timestamp_utc": "2026-09-12T03:29:37+00:00",
       "argv": [
         "run-all",
         "--output",
         "assets"
       ],
       "git": {
-        "commit": "33851d45f22a85ceed26921344382a6013617fe4",
-        "dirty": false,
+        "commit": "8d60e0c5fd2f68802ce122f437205dfd9939f032",
+        "dirty": true,
         "root": "/projects/Navier\u2013Stokes/moss-reg"
       },
       "environment": {
-        "moss_reg": "0.2.1",
+        "moss_reg": "0.3.0",
         "python": "3.14.7",
         "numpy": "2.4.6",
         "scipy": "1.16.2",
@@ -103,6 +103,12 @@
         "vfinal_moss": 1.2666356279295032,
         "steps_classical": 242,
         "steps_moss": 1201,
+        "E_vac_moss_final": 0.10343692781009808,
+        "E_total_drift_moss": 3.123343056010697e-05,
+        "timeseries_csv": [
+          "assets/02_shell_crossing_classical_timeseries.csv",
+          "assets/02_shell_crossing_moss_timeseries.csv"
+        ],
         "params": {
           "n": 200,
           "c": 3.162277660168379,
@@ -119,7 +125,8 @@
       "checks": {
         "undamped_crossing_detected": true,
         "jacobian_histories_finite": true,
-        "damped_speed_bounded": true
+        "damped_speed_bounded": true,
+        "energy_invariant_moss": true
       },
       "figures": [
         "assets/02_shell_crossing_arrest.png"
@@ -127,19 +134,19 @@
     },
     {
       "command": "sweep:particles",
-      "timestamp_utc": "2026-09-12T02:30:37+00:00",
+      "timestamp_utc": "2026-09-12T03:30:05+00:00",
       "argv": [
         "run-all",
         "--output",
         "assets"
       ],
       "git": {
-        "commit": "33851d45f22a85ceed26921344382a6013617fe4",
-        "dirty": false,
+        "commit": "8d60e0c5fd2f68802ce122f437205dfd9939f032",
+        "dirty": true,
         "root": "/projects/Navier\u2013Stokes/moss-reg"
       },
       "environment": {
-        "moss_reg": "0.2.1",
+        "moss_reg": "0.3.0",
         "python": "3.14.7",
         "numpy": "2.4.6",
         "scipy": "1.16.2",
@@ -216,7 +223,7 @@
         },
         "physical_regime_max_delay": 0.02999999999999936,
         "conclusion": "damped runs are speed-limited at |v| ~ 1.52 c; crossing is delayed by ~ (particle spacing)/c and moves earlier as N grows (monotone at c = 0.01); in the physical regime c >= v_ff the maximal delay is 0.03 time units (2 of 30 runs show no crossing within t = 8, all at c < v_ff)",
-        "wall_s": 28.143498664001527,
+        "wall_s": 28.244323691003956,
         "runs": [
           {
             "n": 64,
@@ -232,7 +239,7 @@
             "v_peak": 0.00772884525786594,
             "v_peak_over_c": 1.5457690515731881,
             "steps": 1601,
-            "wall_s": 0.3791505400004098
+            "wall_s": 0.41118632599682314
           },
           {
             "n": 64,
@@ -248,7 +255,7 @@
             "v_peak": 0.014659316279896549,
             "v_peak_over_c": 1.4659316279896548,
             "steps": 1519,
-            "wall_s": 0.35975099400093313
+            "wall_s": 0.39200918399728835
           },
           {
             "n": 64,
@@ -264,7 +271,7 @@
             "v_peak": 0.02888709170103876,
             "v_peak_over_c": 1.444354585051938,
             "steps": 759,
-            "wall_s": 0.1828077829995891
+            "wall_s": 0.194811845998629
           },
           {
             "n": 64,
@@ -280,7 +287,7 @@
             "v_peak": 0.07176173165577517,
             "v_peak_over_c": 1.4352346331155033,
             "steps": 380,
-            "wall_s": 0.0898188819992356
+            "wall_s": 0.09612418199685635
           },
           {
             "n": 64,
@@ -296,7 +303,7 @@
             "v_peak": 0.14270916002523226,
             "v_peak_over_c": 1.4270916002523226,
             "steps": 316,
-            "wall_s": 0.07526350899570389
+            "wall_s": 0.08347866599797271
           },
           {
             "n": 64,
@@ -312,7 +319,7 @@
             "v_peak": 0.28226566897918787,
             "v_peak_over_c": 1.4113283448959393,
             "steps": 297,
-            "wall_s": 0.07018649399833521
+            "wall_s": 0.078295432998857
           },
           {
             "n": 64,
@@ -328,7 +335,7 @@
             "v_peak": 0.6911541218657129,
             "v_peak_over_c": 1.3823082437314258,
             "steps": 283,
-            "wall_s": 0.06821813099668361
+            "wall_s": 0.07327595099923201
           },
           {
             "n": 64,
@@ -344,7 +351,7 @@
             "v_peak": 1.2173956600218958,
             "v_peak_over_c": 1.2173956600218958,
             "steps": 270,
-            "wall_s": 0.06385566599783488
+            "wall_s": 0.06988788900343934
           },
           {
             "n": 64,
@@ -360,7 +367,7 @@
             "v_peak": 1.5388799491337393,
             "v_peak_over_c": 0.7694399745668696,
             "steps": 250,
-            "wall_s": 0.05880373800027883
+            "wall_s": 0.06391920700116316
           },
           {
             "n": 64,
@@ -376,7 +383,7 @@
             "v_peak": 1.5599329678385818,
             "v_peak_over_c": 0.31198659356771635,
             "steps": 244,
-            "wall_s": 0.05751479200262111
+            "wall_s": 0.06277317999774823
           },
           {
             "n": 128,
@@ -392,7 +399,7 @@
             "v_peak": 0.008058221273903664,
             "v_peak_over_c": 1.6116442547807328,
             "steps": 1601,
-            "wall_s": 1.0595833859988488
+            "wall_s": 1.1000776170039899
           },
           {
             "n": 128,
@@ -408,7 +415,7 @@
             "v_peak": 0.015337399179525799,
             "v_peak_over_c": 1.53373991795258,
             "steps": 946,
-            "wall_s": 0.6362763750003069
+            "wall_s": 0.6534347499982687
           },
           {
             "n": 128,
@@ -424,7 +431,7 @@
             "v_peak": 0.030243737009844625,
             "v_peak_over_c": 1.5121868504922311,
             "steps": 501,
-            "wall_s": 0.32819833600660786
+            "wall_s": 0.34345514100277796
           },
           {
             "n": 128,
@@ -440,7 +447,7 @@
             "v_peak": 0.07501671907784492,
             "v_peak_over_c": 1.5003343815568984,
             "steps": 335,
-            "wall_s": 0.23069022099662106
+            "wall_s": 0.23075844700360904
           },
           {
             "n": 128,
@@ -456,7 +463,7 @@
             "v_peak": 0.1485840848279096,
             "v_peak_over_c": 1.485840848279096,
             "steps": 307,
-            "wall_s": 0.2065194680035347
+            "wall_s": 0.20842850000190083
           },
           {
             "n": 128,
@@ -472,7 +479,7 @@
             "v_peak": 0.29137913980284796,
             "v_peak_over_c": 1.4568956990142397,
             "steps": 293,
-            "wall_s": 0.19648398700519465
+            "wall_s": 0.20126197199715534
           },
           {
             "n": 128,
@@ -488,7 +495,7 @@
             "v_peak": 0.6996040531880439,
             "v_peak_over_c": 1.3992081063760877,
             "steps": 256,
-            "wall_s": 0.1707252990017878
+            "wall_s": 0.1730696319937124
           },
           {
             "n": 128,
@@ -504,7 +511,7 @@
             "v_peak": 1.2351345465729866,
             "v_peak_over_c": 1.2351345465729866,
             "steps": 263,
-            "wall_s": 0.17566098699899158
+            "wall_s": 0.17783491300360765
           },
           {
             "n": 128,
@@ -520,7 +527,7 @@
             "v_peak": 1.5564593858682545,
             "v_peak_over_c": 0.7782296929341272,
             "steps": 249,
-            "wall_s": 0.16777512700355146
+            "wall_s": 0.17113261300255544
           },
           {
             "n": 128,
@@ -536,7 +543,7 @@
             "v_peak": 1.5697611170025778,
             "v_peak_over_c": 0.31395222340051554,
             "steps": 243,
-            "wall_s": 0.16333438299625413
+            "wall_s": 0.1649178040024708
           },
           {
             "n": 256,
@@ -552,7 +559,7 @@
             "v_peak": 0.008246172107109016,
             "v_peak_over_c": 1.649234421421803,
             "steps": 1192,
-            "wall_s": 3.20358851000492
+            "wall_s": 3.0039951159997145
           },
           {
             "n": 256,
@@ -568,7 +575,7 @@
             "v_peak": 0.01572428537765688,
             "v_peak_over_c": 1.572428537765688,
             "steps": 607,
-            "wall_s": 1.5481815690000076
+            "wall_s": 1.544510570995044
           },
           {
             "n": 256,
@@ -584,7 +591,7 @@
             "v_peak": 0.031016486202196346,
             "v_peak_over_c": 1.5508243101098174,
             "steps": 385,
-            "wall_s": 0.9762501220029662
+            "wall_s": 0.9749176520053879
           },
           {
             "n": 256,
@@ -600,7 +607,7 @@
             "v_peak": 0.07685760809989316,
             "v_peak_over_c": 1.537152161997863,
             "steps": 322,
-            "wall_s": 0.8226555860019289
+            "wall_s": 0.8215019659983227
           },
           {
             "n": 256,
@@ -616,7 +623,7 @@
             "v_peak": 0.1518668013950263,
             "v_peak_over_c": 1.518668013950263,
             "steps": 304,
-            "wall_s": 0.799963002995355
+            "wall_s": 0.7726932189980289
           },
           {
             "n": 256,
@@ -632,7 +639,7 @@
             "v_peak": 0.2963965236855224,
             "v_peak_over_c": 1.481982618427612,
             "steps": 291,
-            "wall_s": 0.8290028589981375
+            "wall_s": 0.7630871250003111
           },
           {
             "n": 256,
@@ -648,7 +655,7 @@
             "v_peak": 0.704658986560341,
             "v_peak_over_c": 1.409317973120682,
             "steps": 238,
-            "wall_s": 0.6691784110007575
+            "wall_s": 0.5998461609997321
           },
           {
             "n": 256,
@@ -664,7 +671,7 @@
             "v_peak": 1.244184087281979,
             "v_peak_over_c": 1.244184087281979,
             "steps": 260,
-            "wall_s": 0.7175242429948412
+            "wall_s": 0.6620297550034593
           },
           {
             "n": 256,
@@ -680,7 +687,7 @@
             "v_peak": 1.5627255900327888,
             "v_peak_over_c": 0.7813627950163944,
             "steps": 248,
-            "wall_s": 0.672444934003579
+            "wall_s": 0.6377198250047513
           },
           {
             "n": 256,
@@ -696,7 +703,7 @@
             "v_peak": 1.5699978242250399,
             "v_peak_over_c": 0.31399956484500796,
             "steps": 242,
-            "wall_s": 0.6708730690006632
+            "wall_s": 0.6141231229994446
           }
         ],
         "classical_reference": {
@@ -714,7 +721,7 @@
             "v_peak": 1.5637358056250656,
             "v_peak_over_c": null,
             "steps": 244,
-            "wall_s": 0.05859726800554199
+            "wall_s": 0.06745650200173259
           },
           "128": {
             "n": 128,
@@ -730,7 +737,7 @@
             "v_peak": 1.5730848009735277,
             "v_peak_over_c": null,
             "steps": 243,
-            "wall_s": 0.16109497300203657
+            "wall_s": 0.16975804899993818
           },
           "256": {
             "n": 256,
@@ -746,7 +753,7 @@
             "v_peak": 1.5730350486079605,
             "v_peak_over_c": null,
             "steps": 242,
-            "wall_s": 0.6202645829980611
+            "wall_s": 0.6202666969984421
           }
         },
         "sensitivity": {
@@ -765,7 +772,7 @@
               "v_peak": 0.018790069000758917,
               "v_peak_over_c": 1.8790069000758916,
               "steps": 237,
-              "wall_s": 0.15865295299590798
+              "wall_s": 0.1631369730021106
             },
             {
               "n": 128,
@@ -781,7 +788,7 @@
               "v_peak": 0.016112941591956528,
               "v_peak_over_c": 1.6112941591956527,
               "steps": 473,
-              "wall_s": 0.31572634800249944
+              "wall_s": 0.3292869029974099
             },
             {
               "n": 128,
@@ -797,7 +804,7 @@
               "v_peak": 0.015337399179525799,
               "v_peak_over_c": 1.53373991795258,
               "steps": 946,
-              "wall_s": 0.6302803620055784
+              "wall_s": 0.6807588689989643
             },
             {
               "n": 128,
@@ -813,7 +820,7 @@
               "v_peak": 0.015134387449367662,
               "v_peak_over_c": 1.5134387449367661,
               "steps": 1891,
-              "wall_s": 1.2622489650020725
+              "wall_s": 1.334643160997075
             }
           ],
           "h": [
@@ -831,7 +838,7 @@
               "v_peak": 0.014667249712210097,
               "v_peak_over_c": 1.4667249712210095,
               "steps": 978,
-              "wall_s": 0.6389973510013078
+              "wall_s": 0.6690655339989462
             },
             {
               "n": 128,
@@ -847,7 +854,7 @@
               "v_peak": 0.015099505922897778,
               "v_peak_over_c": 1.5099505922897778,
               "steps": 958,
-              "wall_s": 0.64330605899886
+              "wall_s": 0.6574869110045256
             },
             {
               "n": 128,
@@ -863,7 +870,7 @@
               "v_peak": 0.015337399179525799,
               "v_peak_over_c": 1.53373991795258,
               "steps": 946,
-              "wall_s": 0.6296152340000845
+              "wall_s": 0.6574951160000637
             },
             {
               "n": 128,
@@ -879,7 +886,7 @@
               "v_peak": 0.015592352911885751,
               "v_peak_over_c": 1.5592352911885752,
               "steps": 933,
-              "wall_s": 0.6322737549999147
+              "wall_s": 0.6342781519997516
             },
             {
               "n": 128,
@@ -895,7 +902,7 @@
               "v_peak": 0.015726848427152204,
               "v_peak_over_c": 1.5726848427152205,
               "steps": 925,
-              "wall_s": 0.6096929150007782
+              "wall_s": 0.6247928579978179
             }
           ],
           "softening": [
@@ -913,7 +920,7 @@
               "v_peak": 0.020724908411970375,
               "v_peak_over_c": 2.0724908411970375,
               "steps": 758,
-              "wall_s": 0.5022953110019444
+              "wall_s": 0.512984378998226
             },
             {
               "n": 128,
@@ -929,7 +936,7 @@
               "v_peak": 0.017381961980686134,
               "v_peak_over_c": 1.7381961980686134,
               "steps": 875,
-              "wall_s": 0.576204268996662
+              "wall_s": 0.5936680079976213
             },
             {
               "n": 128,
@@ -945,7 +952,7 @@
               "v_peak": 0.015337399179525799,
               "v_peak_over_c": 1.53373991795258,
               "steps": 946,
-              "wall_s": 0.6239166329978616
+              "wall_s": 0.641961084002105
             },
             {
               "n": 128,
@@ -961,7 +968,7 @@
               "v_peak": 0.012758805499161183,
               "v_peak_over_c": 1.2758805499161183,
               "steps": 1060,
-              "wall_s": 0.7098002850034391
+              "wall_s": 0.7216476479952689
             },
             {
               "n": 128,
@@ -977,7 +984,7 @@
               "v_peak": 0.01107666404287206,
               "v_peak_over_c": 1.107666404287206,
               "steps": 1178,
-              "wall_s": 0.7861273449962027
+              "wall_s": 0.8043826470020576
             }
           ]
         },
@@ -997,7 +1004,7 @@
               "v_peak": 1.5816376442134614,
               "v_peak_over_c": null,
               "steps": 61,
-              "wall_s": 0.04071347300487105
+              "wall_s": 0.04236917399975937
             },
             {
               "n": 128,
@@ -1013,7 +1020,7 @@
               "v_peak": 1.5818273027948229,
               "v_peak_over_c": null,
               "steps": 122,
-              "wall_s": 0.0799857400052133
+              "wall_s": 0.08379758599767229
             },
             {
               "n": 128,
@@ -1029,7 +1036,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.16310585099563468
+              "wall_s": 0.2008693379975739
             },
             {
               "n": 128,
@@ -1045,7 +1052,7 @@
               "v_peak": 1.5686398681351854,
               "v_peak_over_c": null,
               "steps": 485,
-              "wall_s": 0.3275078000006033
+              "wall_s": 0.3369320509955287
             }
           ],
           "h": [
@@ -1063,7 +1070,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.1584253139953944
+              "wall_s": 0.16821839799376903
             },
             {
               "n": 128,
@@ -1079,7 +1086,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.16361114400206134
+              "wall_s": 0.16570515100465855
             },
             {
               "n": 128,
@@ -1095,7 +1102,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.16371364800579613
+              "wall_s": 0.1657364159982535
             },
             {
               "n": 128,
@@ -1111,7 +1118,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.16221007100102725
+              "wall_s": 0.17012852300103987
             },
             {
               "n": 128,
@@ -1127,7 +1134,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.16328405700187432
+              "wall_s": 0.1630407060001744
             }
           ],
           "softening": [
@@ -1145,7 +1152,7 @@
               "v_peak": 1.7326690483301024,
               "v_peak_over_c": null,
               "steps": 126,
-              "wall_s": 0.08344733800186077
+              "wall_s": 0.08612149499822408
             },
             {
               "n": 128,
@@ -1161,7 +1168,7 @@
               "v_peak": 1.6754697383111667,
               "v_peak_over_c": null,
               "steps": 187,
-              "wall_s": 0.12379361799685284
+              "wall_s": 0.12697226100135595
             },
             {
               "n": 128,
@@ -1177,7 +1184,7 @@
               "v_peak": 1.5730848009735277,
               "v_peak_over_c": null,
               "steps": 243,
-              "wall_s": 0.16579697000270244
+              "wall_s": 0.16935385300166672
             },
             {
               "n": 128,
@@ -1193,7 +1200,7 @@
               "v_peak": 1.1564094585692182,
               "v_peak_over_c": null,
               "steps": 329,
-              "wall_s": 0.2230967290015542
+              "wall_s": 0.22346594099508366
             },
             {
               "n": 128,
@@ -1209,7 +1216,7 @@
               "v_peak": 0.8617905610211554,
               "v_peak_over_c": null,
               "steps": 400,
-              "wall_s": 0.26656713699776446
+              "wall_s": 0.27524159099993994
             }
           ]
         },
@@ -1274,19 +1281,19 @@
     },
     {
       "command": "compare:fluid",
-      "timestamp_utc": "2026-09-12T02:30:52+00:00",
+      "timestamp_utc": "2026-09-12T03:30:23+00:00",
       "argv": [
         "run-all",
         "--output",
         "assets"
       ],
       "git": {
-        "commit": "33851d45f22a85ceed26921344382a6013617fe4",
-        "dirty": false,
+        "commit": "8d60e0c5fd2f68802ce122f437205dfd9939f032",
+        "dirty": true,
         "root": "/projects/Navier\u2013Stokes/moss-reg"
       },
       "environment": {
-        "moss_reg": "0.2.1",
+        "moss_reg": "0.3.0",
         "python": "3.14.7",
         "numpy": "2.4.6",
         "scipy": "1.16.2",
@@ -1317,6 +1324,19 @@
         "dt_min_used": 0.004999999999837357,
         "E_classical_final": 0.20468268826949643,
         "E_moss_final": 0.031857822429750715,
+        "energy_budget_moss": {
+          "E0": 0.25,
+          "E_final": 0.031857822429750715,
+          "D_visc_final": 0.015927791803029317,
+          "E_vac_final": 0.20221483409997623,
+          "residual_final": 4.4833275625322244e-07,
+          "max_abs_residual": 4.4833275625322244e-07,
+          "vac_fraction": 0.9269864102042169
+        },
+        "timeseries_csv": [
+          "assets/03_cfd_classical_timeseries.csv",
+          "assets/03_cfd_moss_timeseries.csv"
+        ],
         "steps_classical": 2000,
         "steps_moss": 2000,
         "params": {
@@ -1331,6 +1351,7 @@
       "checks": {
         "taylor_green_exact_decay": true,
         "energy_identity": true,
+        "energy_budget_closed": true,
         "energy_monotone_classical": true,
         "energy_monotone_moss": true
       },
@@ -1339,20 +1360,114 @@
       ]
     },
     {
-      "command": "validate",
-      "timestamp_utc": "2026-09-12T02:30:55+00:00",
+      "command": "compare:fluid3d",
+      "timestamp_utc": "2026-09-12T03:31:53+00:00",
       "argv": [
         "run-all",
         "--output",
         "assets"
       ],
       "git": {
-        "commit": "33851d45f22a85ceed26921344382a6013617fe4",
-        "dirty": false,
+        "commit": "8d60e0c5fd2f68802ce122f437205dfd9939f032",
+        "dirty": true,
         "root": "/projects/Navier\u2013Stokes/moss-reg"
       },
       "environment": {
-        "moss_reg": "0.2.1",
+        "moss_reg": "0.3.0",
+        "python": "3.14.7",
+        "numpy": "2.4.6",
+        "scipy": "1.16.2",
+        "matplotlib": "3.11.2",
+        "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43"
+      },
+      "params": {
+        "n": 32,
+        "lam": 0.5,
+        "re": 800.0,
+        "nu": 0.00125,
+        "t_max": 6.0,
+        "dt_max": 0.01
+      },
+      "metrics": {
+        "n": 32,
+        "re": 800.0,
+        "nu": 0.00125,
+        "lam": 0.5,
+        "enstrophy_peak_classical": 3.209048425849662,
+        "enstrophy_peak_time_classical": 6.0,
+        "enstrophy_peak_moss": 0.4150316790352781,
+        "enstrophy_peak_time_moss": 6.0,
+        "omega_max_peak_classical": 9.919091641845686,
+        "omega_max_peak_moss": 3.349712091532526,
+        "kmax_eta_min_classical": 0.23612537552885118,
+        "kmax_eta_min_moss": 0.3937462380850027,
+        "tail_fraction_max_classical": 0.18661745943370261,
+        "tail_fraction_max_moss": 0.025173533997009306,
+        "classical_under_resolved_from_t": 2.3799999999999932,
+        "classical_under_resolved": true,
+        "moss_under_resolved": true,
+        "E_final_classical": 0.1078289030996547,
+        "E_final_moss": 0.03834164639386296,
+        "energy_budget_classical": {
+          "E0": 0.12499999999999999,
+          "E_final": 0.1078289030996547,
+          "D_visc_final": 0.01717112038622196,
+          "E_vac_final": 0.0,
+          "residual_final": 2.3485876677470374e-08,
+          "max_abs_residual": 2.5619689474065677e-08,
+          "vac_fraction": 0.0
+        },
+        "energy_budget_moss": {
+          "E0": 0.12499999999999999,
+          "E_final": 0.03834164639386296,
+          "D_visc_final": 0.005114953015180616,
+          "E_vac_final": 0.08154394689397103,
+          "residual_final": 5.463030146174441e-07,
+          "max_abs_residual": 5.463030146174441e-07,
+          "vac_fraction": 0.9409819538528159
+        },
+        "steps_classical": 601,
+        "steps_moss": 601,
+        "wall_classical_s": 25.260682607004128,
+        "wall_moss_s": 63.91677274999529,
+        "timeseries_csv": [
+          "assets/05_tg3d_classical_timeseries.csv",
+          "assets/05_tg3d_moss_timeseries.csv"
+        ],
+        "params": {
+          "n": 32,
+          "lam": 0.5,
+          "re": 800.0,
+          "nu": 0.00125,
+          "t_max": 6.0,
+          "dt_max": 0.01
+        }
+      },
+      "checks": {
+        "energy_budget_classical": true,
+        "energy_budget_moss": true,
+        "divergence_free": true,
+        "all_finite": true
+      },
+      "figures": [
+        "assets/05_tg3d.png"
+      ]
+    },
+    {
+      "command": "validate",
+      "timestamp_utc": "2026-09-12T03:31:57+00:00",
+      "argv": [
+        "run-all",
+        "--output",
+        "assets"
+      ],
+      "git": {
+        "commit": "8d60e0c5fd2f68802ce122f437205dfd9939f032",
+        "dirty": true,
+        "root": "/projects/Navier\u2013Stokes/moss-reg"
+      },
+      "environment": {
+        "moss_reg": "0.3.0",
         "python": "3.14.7",
         "numpy": "2.4.6",
         "scipy": "1.16.2",
@@ -1424,126 +1539,154 @@
             "name": "exact solution matches closed form",
             "status": "PASS",
             "detail": "max rel err 0.0e+00",
-            "seconds": 0.0003264600018155761
+            "seconds": 0.00033009400067385286
           },
           {
             "group": "damping",
             "name": "exact flow composes: phi_a o phi_b = phi_(a+b)",
             "status": "PASS",
             "detail": "phi_a o phi_b vs phi_(a+b): max rel err 3.6e-16",
-            "seconds": 0.00013025500084040686
+            "seconds": 0.00013078600022708997
           },
           {
             "group": "damping",
             "name": "particle integrator: v(T) = v0/sqrt(1+2 lam v0^2 T) for any dt",
             "status": "PASS",
             "detail": "v(T) vs 1/sqrt(1+2 lam v0^2 T): max rel err 7.0e-16 (0.1.0 value would be 0.2928 vs 0.3974)",
-            "seconds": 0.005687261000275612
+            "seconds": 0.007610649001435377
           },
           {
             "group": "damping",
             "name": "explicit Euler is first order",
             "status": "PASS",
             "detail": "error slope 1.003 (expect 1)",
-            "seconds": 0.006291190999036189
+            "seconds": 0.007426774005580228
           },
           {
             "group": "convergence",
             "name": "KDK gravity integrator is second order (two-body)",
             "status": "PASS",
             "detail": "error ratios per dt halving [3.99, 4.0] (expect 4)",
-            "seconds": 0.2687996410022606
+            "seconds": 0.34327955300250323
           },
           {
             "group": "convergence",
             "name": "spectral RK4 is fourth order (damped Taylor-Green)",
             "status": "PASS",
             "detail": "E(T) error ratios per dt halving [19.9, 18.2] (expect 16)",
-            "seconds": 0.7455721180012915
+            "seconds": 0.7837248949945206
           },
           {
             "group": "particles",
             "name": "cubic spline kernels are normalized (1D, 3D)",
             "status": "PASS",
             "detail": "int W dV: 1D 1.000000, 3D 1.000000",
-            "seconds": 0.0027596510044531897
+            "seconds": 0.002606083005957771
           },
           {
             "group": "particles",
             "name": "dense and cKDTree density estimates agree",
             "status": "PASS",
             "detail": "dense vs cKDTree density: max abs diff 8.5e-14",
-            "seconds": 0.009167921998596285
+            "seconds": 0.009034744995005894
           },
           {
             "group": "particles",
             "name": "dense and loop gravity agree",
             "status": "PASS",
             "detail": "dense vs loop gravity: max abs diff 0.0e+00",
-            "seconds": 0.0012791590052074753
+            "seconds": 0.0013066550018265843
           },
           {
             "group": "particles",
             "name": "Jacobian monitor: linear maps, crossing detection",
             "status": "PASS",
             "detail": "1D scaling J = 0.400, swap detected True, 3D det 8.000000 (expect 8)",
-            "seconds": 0.01299577800091356
+            "seconds": 0.012723435997031629
           },
           {
             "group": "particles",
             "name": "undamped 1D cold collapse shell-crosses (J <= 0)",
             "status": "PASS",
             "detail": "min J -1.005, crossing at t = 1.219999999999996, v_ff 1.671",
-            "seconds": 0.09228988699760521
+            "seconds": 0.09726594899984775
           },
           {
             "group": "particles",
             "name": "damped collapse (c = 0.01): speed capped near c",
             "status": "PASS",
             "detail": "c = 0.01: peak |v| / c = 1.47 (cubic damping caps speed near c)",
-            "seconds": 0.1370862199983094
+            "seconds": 0.14450670200312743
           },
           {
             "group": "particles",
             "name": "physical regime (v_ff < c): damping does not prevent crossing",
             "status": "PASS",
             "detail": "c = 2 (v_ff/c = 0.77 < 1): crossing at t = 1.2499999999999953, min J -0.829",
-            "seconds": 0.09230917000240879
+            "seconds": 0.09984229000110645
           },
           {
             "group": "fluid",
             "name": "Taylor-Green viscous eigenmode decays exactly",
             "status": "PASS",
             "detail": "max rel err vs exp(-4 nu t): 2.2e-15",
-            "seconds": 0.44119974200293655
+            "seconds": 0.4369017420031014
           },
           {
             "group": "fluid",
             "name": "flow stays divergence-free with damping",
             "status": "PASS",
             "detail": "max |div u| = 4.5e-15",
-            "seconds": 0.0782544340036111
+            "seconds": 0.08322055699682096
           },
           {
             "group": "fluid",
             "name": "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4",
             "status": "PASS",
             "detail": "E(T) - [E0 - int(2 nu Omega + lam ||u||_4^4)] = +4.1e-07 (every-step trapezoid)",
-            "seconds": 0.7303425819991389
+            "seconds": 0.7647724209964508
           },
           {
             "group": "fluid",
             "name": "cubic damping term dealiased (2/3 rule alone is not enough)",
             "status": "PASS",
             "detail": "aliased |k|=3 amplitude: 2/3 rule 0.1250, padded 6.1e-16",
-            "seconds": 0.0015911529990262352
+            "seconds": 0.0017236369967577048
           },
           {
             "group": "fluid",
             "name": "cfl_dt includes the cubic damping stiffness limit",
             "status": "PASS",
             "detail": "dt_damp = 1.67e-03 (2 cfl / 3 lam |u|^2 = 1.67e-03), cfl_dt = 1.67e-03",
-            "seconds": 0.0003066200006287545
+            "seconds": 0.00037469700328074396
+          },
+          {
+            "group": "fluid3d",
+            "name": "3D shear mode u = sin y decays exactly",
+            "status": "PASS",
+            "detail": "u = sin y exp(-nu t): max abs err 2.2e-16",
+            "seconds": 0.39626858699921286
+          },
+          {
+            "group": "fluid3d",
+            "name": "3D Taylor-Green: energy budget closes, divergence-free",
+            "status": "PASS",
+            "detail": "3D Taylor-Green: budget residual 3.4e-07, E_vac 2.235e-02, max |div u| 2.3e-15",
+            "seconds": 0.6120741609993274
+          },
+          {
+            "group": "fluid3d",
+            "name": "3D cubic damping term dealiased",
+            "status": "PASS",
+            "detail": "aliased |k|=1 amplitude: 2/3 rule 0.1250, padded 1.5e-16",
+            "seconds": 0.004696522999438457
+          },
+          {
+            "group": "invariants",
+            "name": "particles: E_kin + E_pot + E_vac conserved to O(dt^2)",
+            "status": "PASS",
+            "detail": "E_kin + E_pot + E_vac drift 9.91e-04 -> 2.53e-04 per dt halving (ratio 3.92, expect 4); E_vac = 4.014e-02",
+            "seconds": 0.028361368997138925
           }
         ]
       },
@@ -1573,10 +1716,14 @@
         "flow stays divergence-free with damping": "PASS",
         "energy identity dE/dt = -2 nu Omega - lam ||u||_4^4": "PASS",
         "cubic damping term dealiased (2/3 rule alone is not enough)": "PASS",
-        "cfl_dt includes the cubic damping stiffness limit": "PASS"
+        "cfl_dt includes the cubic damping stiffness limit": "PASS",
+        "3D shear mode u = sin y decays exactly": "PASS",
+        "3D Taylor-Green: energy budget closes, divergence-free": "PASS",
+        "3D cubic damping term dealiased": "PASS",
+        "particles: E_kin + E_pot + E_vac conserved to O(dt^2)": "PASS"
       },
       "figures": []
     }
   ],
-  "generated_utc": "2026-09-12T02:30:55+00:00"
+  "generated_utc": "2026-09-12T03:31:57+00:00"
 }
