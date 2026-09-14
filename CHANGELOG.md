@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `moss_reg.scaling` and `moss-reg scaling "<inequality>" [--dim d]`: homogeneity
+  (dilation and amplitude) check of inequalities between Sobolev-type norms;
+  a mismatch proves the inequality false for every constant. Rejects the
+  version-1 interpolation inequality in one call; `interpolation_exponent`
+  gives the Gagliardo-Nirenberg theta; `damping_exponent_scaling` classifies
+  the damping exponent under the Navier-Stokes symmetry.
+- `validate` group `inequalities` (3 checks): 32 PASS + 1 XFAIL in total.
+
 ## 0.4.0 (2026-09-12)
 
 ### Added

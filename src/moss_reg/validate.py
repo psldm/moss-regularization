@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
+from fractions import Fraction
 from typing import Callable, Dict, List, Tuple
 
 import numpy as np
@@ -376,6 +377,33 @@ def _particle_energy_invariant() -> Tuple[bool, str]:
 
 
 # ---------------------------------------------------------------------------
+# inequalities (scaling admissibility)
+# ---------------------------------------------------------------------------
+
+def _v1_inequality_rejected() -> Tuple[bool, str]:
+    from .scaling import check_inequality
+
+    r = check_inequality("|D1 u|_2^2 <= |u|_4^{4/3} |D2 u|_2^{2/3}", d=3)
+    return (not r["homogeneous"]), f"paper v1 eq. (596): LHS ~ mu^{r['lhs_dilation']}, RHS ~ mu^{r['rhs_dilation']} -> rejected"
+
+
+def _corrected_gn_admissible() -> Tuple[bool, str]:
+    from .scaling import check_inequality, interpolation_exponent
+
+    r = check_inequality("|D1 u|_2 <= |u|_4^{4/5} |D2 u|_2^{1/5}", d=3)
+    theta = interpolation_exponent(1, 2, 2, 2, 4, d=3)
+    return r["homogeneous"] and theta == Fraction(1, 5), f"GN with theta = {theta}: admissible; v3.14 eq. (23)"
+
+
+def _damping_criticality() -> Tuple[bool, str]:
+    from .scaling import damping_exponent_scaling
+
+    a2, a3 = damping_exponent_scaling(2), damping_exponent_scaling(3)
+    ok = a2["class"].startswith("critical") and a3["class"].startswith("supercritical")
+    return ok, f"lam |u|^2 u ~ mu^{a2['exponent']} (viscous: mu^3): {a2['class']}; alpha = 3: {a3['class']}"
+
+
+# ---------------------------------------------------------------------------
 # runner
 # ---------------------------------------------------------------------------
 
@@ -402,6 +430,9 @@ _CHECKS: List[Tuple[str, str, CheckFn]] = [
     ("fluid3d", "3D Taylor-Green: energy budget closes, divergence-free", _energy_budget_3d),
     ("fluid3d", "3D cubic damping term dealiased", _cubic_dealiasing_3d),
     ("invariants", "particles: E_kin + E_pot + E_vac conserved to O(dt^2)", _particle_energy_invariant),
+    ("inequalities", "version-1 interpolation inequality fails the scaling test", _v1_inequality_rejected),
+    ("inequalities", "corrected Gagliardo-Nirenberg exponents are scaling-admissible", _corrected_gn_admissible),
+    ("inequalities", "alpha = 2 damping is exactly critical under the NS scaling", _damping_criticality),
 ]
 
 

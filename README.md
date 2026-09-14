@@ -25,7 +25,7 @@ supplement are attached to the [releases](https://github.com/psldm/moss-regulari
 
 ```bash
 pip install -e .
-moss-reg validate                 # 29 PASS/FAIL checks + 1 documented open issue, ~5 s
+moss-reg validate                 # 32 PASS/FAIL checks + 1 documented open issue, ~5 s
 moss-reg compare --type fluid     # 2D Taylor-Green, classical vs damped: PNG + CSV + report.json
 moss-reg compare --type particles # 1D collapse, classical vs damped (physical regime)
 moss-reg compare --type fluid3d   # 3D Taylor-Green at 32^3, ~2 min
@@ -286,11 +286,13 @@ admissible regime.
 
 ```
 moss-reg validate [--json PATH] [--strict]
-    29 PASS/FAIL checks + 1 XFAIL: dimensional formulas, exact damping and
+    32 PASS/FAIL checks + 1 XFAIL: dimensional formulas, exact damping and
     composition, integrator horizon regression, Euler / KDK / RK4 orders,
     kernels, density and gravity paths, Jacobian monitor, collapse
     phenomenology, 2D and 3D exact decays, divergence, energy budgets,
-    cubic dealiasing (2D, 3D), damping dt limit, particle energy invariant.
+    cubic dealiasing (2D, 3D), damping dt limit, particle energy invariant,
+    scaling admissibility of the paper's inequalities and the criticality
+    of alpha = 2.
 
 moss-reg compare --type {particles,fluid,fluid3d} [--output DIR] [options]
     particles: --n N --compactness K | --c C --t-max T --dt DT --softening E --h H
@@ -303,6 +305,12 @@ moss-reg sweep3d [--output DIR] [--quick] [--re RE] [--t-max T] [--dt DT]
                  [--classical-n N ...] [--damped-n N ...] [--lambdas X ...] [--lambdas-small-n X ...]
 moss-reg run-all [--output DIR] [--quick] [--no-3d]
 moss-reg supplement [--report PATH] [--output PATH] [--figures-dir DIR] [--copy-figures]
+moss-reg scaling "<inequality>" [--dim d]
+    Homogeneity check of a norm inequality, e.g.
+    moss-reg scaling "|D1 u|_2^2 <= |u|_4^{4/3} |D2 u|_2^{2/3}"   -> REJECTED (exit 1)
+    moss-reg scaling "|D1 u|_2 <= |u|_4^{4/5} |D2 u|_2^{1/5}"    -> ADMISSIBLE (exit 0)
+    A mismatch of dilation or amplitude exponents proves the inequality false
+    for every constant; run it on any inequality before reading its proof.
 moss-reg benchmark --type {decay,particles,fluid} [options]      (legacy)
 ```
 

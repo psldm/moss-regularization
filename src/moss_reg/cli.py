@@ -7,6 +7,7 @@ Usage:
     moss-reg sweep3d   [options]      (3D resolution x damping-number sweep, long)
     moss-reg run-all   [--output DIR] [--quick]
     moss-reg supplement [--report PATH] [--output PATH] [--copy-figures]
+    moss-reg scaling "<inequality>" [--dim d]   (homogeneity check; exit 1 = rejected)
     moss-reg benchmark --type {decay,particles,fluid} [options]   (legacy)
 
 ``validate`` runs the PASS/FAIL self-checks (formulas, integrators,
@@ -126,6 +127,11 @@ def _build_parser() -> argparse.ArgumentParser:
     swp.add_argument("--dt", type=float, default=None, help="baseline maximum timestep")
     swp.add_argument("--h", type=float, default=None, help="baseline smoothing length")
     swp.add_argument("--softening", type=float, default=None, help="baseline softening")
+
+    sc = sub.add_parser("scaling", help="homogeneity (scaling) check of a norm inequality")
+    sc.add_argument("inequality", help='e.g. "|D1 u|_2^2 <= |u|_4^{4/3} |D2 u|_2^{2/3}"')
+    sc.add_argument("--dim", type=int, default=3, help="space dimension (default 3)")
+    sc.add_argument("--json", dest="as_json", action="store_true", help="print JSON")
 
     sup = sub.add_parser("supplement", help="LaTeX supplementary material generated from report.json")
     sup.add_argument("--report", default="assets/report.json", help="input report.json")
@@ -338,6 +344,20 @@ def cmd_run_all(args: argparse.Namespace, argv: Optional[List[str]] = None) -> i
     return rc
 
 
+def cmd_scaling(args: argparse.Namespace) -> int:
+    from .scaling import check_inequality
+
+    r = check_inequality(args.inequality, d=args.dim)
+    if args.as_json:
+        print(json.dumps(r, indent=2))
+    else:
+        print(f"{r['inequality']}   (d = {r['d']})")
+        print(f"  dilation : LHS ~ mu^{r['lhs_dilation']}, RHS ~ mu^{r['rhs_dilation']}")
+        print(f"  amplitude: LHS ~ A^{r['lhs_amplitude']}, RHS ~ A^{r['rhs_amplitude']}")
+        print(f"  {'ADMISSIBLE' if r['homogeneous'] else 'REJECTED'}: {r['reason']}")
+    return 0 if r["homogeneous"] else 1
+
+
 def cmd_supplement(args: argparse.Namespace) -> int:
     path = write_supplement(
         Path(args.report), Path(args.output), figures_dir=args.figures_dir,
@@ -380,6 +400,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             return cmd_run_all(args, argv_list)
         if args.command == "supplement":
             return cmd_supplement(args)
+        if args.command == "scaling":
+            return cmd_scaling(args)
         return cmd_benchmark(args)
     except Exception as exc:  # pragma: no cover - CLI error path
         print(f"moss-reg: error: {type(exc).__name__}: {exc}", file=sys.stderr)
